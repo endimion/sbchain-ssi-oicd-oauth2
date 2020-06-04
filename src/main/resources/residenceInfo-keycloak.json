@@ -1,0 +1,9 @@
+{
+    "realm": "residenceinfo",
+    "resource" : "residence-info-client",
+    "auth-server-url": "http://localhost:9090/auth/",
+    "credentials" : {
+        "secret" : "5dcb56e8-02d5-41e8-ab3e-be15c7aab75c"
+     },
+    "principal-attribute" : "prefered_username"
+}

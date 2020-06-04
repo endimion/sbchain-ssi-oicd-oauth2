@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{residence.info.title}">Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
+</head>
+<body>
+    <div th:replace="fragments/header"></div>
+    <div class="container">
+        <!-- <form method="post" action="#" th:action="@{/multi/disqualifyingCrit/save}" th:object="${disqCriteria}" id="infoForm"> -->
+            <div class="formTitleContainer">
+                <h2 th:text="#{disqualifying.criteria.title}" class="formTitle">Disqualifying Criteria</h2>
+                <div class="infoButton" th:text="i" id="infoButton">i</div>
+            </div>
+            <hr class="divider--light">
+            <div class="infoTextBox" id="infoTextBox" style="display:none;">
+                <h2 th:text="#{disqualifying.criteria.info.title}" class="infoTextBoxTitle"></h2>
+                <div class="inftoTextListContainer">
+                    <ul>
+                        <li th:text="#{disq.criteria.list.1}"></li>
+                        <li th:text="#{disq.criteria.list.2}"></li>
+                        <li th:text="#{disq.criteria.list.3}"></li>
+                        <li th:text="#{disq.criteria.list.4}"></li>
+                    </ul>
+                    <div th:text="#{disq.info.list.title2}"></div>
+                    <ul>
+                        <li th:text="#{disq.criteria.list.5}"></li>
+                        <li th:text="#{disq.criteria.list.6}"></li>
+                        <li th:text="#{disq.criteria.list.7}"></li>
+                        <li th:text="#{disq.criteria.list.8}"></li>
+                        <li th:text="#{disq.criteria.list.9}"></li>
+                    </ul>
+                    <div th:text="#{disq.info.list.title3}"></div>
+                    <ul>
+                        <li th:text="#{disq.criteria.list.10}"></li>
+                        <li th:text="#{disq.criteria.list.11}"></li>
+                        <li th:text="#{disq.criteria.list.12}"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row__container"> 
+                <div class="row triplecol__row disqualify__row row--smallcol">
+                    <input type="text" id="hospitalizedBox" th:value="${ssiInfo != null}? ${ssiInfo[hospitalized]} : ''" class="mainBox" hidden="true" readonly>
+                    <div class="checkboxContainer checkboxContainer--false">
+                        <input type="checkbox" id="hospitalizedBoxFalse" class="checkBox disqCrit__checkBox hospitalizedcBox falseBox" th:value="${false}" disabled>
+                        <label th:text="#{no}" class="label checkBox__label label--right"> No </label>
+                    </div>  
+                    <div class="checkboxContainer checkboxContainer--true">
+                        <input type="checkbox" id="hospitalizedBoxTrue" class="checkBox disqCrit__checkBox hospitalizedcBox trueBox" th:value="${false}" disabled>
+                        <label th:text="#{yes}" class="label checkBox__label label--right"> Yes </label>
+                    </div>
+                    <div th:text="#{hospitalized.description}" class="text disqCrit__text text--right"> Resident at health care institution </div>
+                </div>
+                <hr class="divider--light">
+                <div class="row triplecol__row disqualify__row row--smallcol">
+                    <input type="text" id="hospSpecBox" th:value="${ssiInfo != null}? ${ssiInfo[hospitalizedSpecific]} : ''" class="mainBox" hidden="true" readonly>
+                    <div class="checkboxContainer checkboxContainer--false">
+                        <input type="checkbox" id="hospitalizedSpecBoxFalse" class="checkBox disqCrit__checkBox hospSpeccBox falseBox" th:value="${false}" disabled>
+                        <label th:text="#{no}" class="label checkBox__label label--right"> No </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer--true">
+                        <input type="checkbox" id="hospitalizedSpecBoxTrue" class="checkBox disqCrit__checkBox hospSpeccBox trueBox" th:value="${false}" disabled>
+                        <label th:text="#{yes}" class="label checkBox__label label--right"> Yes </label>
+                    </div>
+                    <div th:text="#{hospitalized.specific.description}" class="text disqCrit__text text--right"> Resident at mental health care institution </div>
+                </div>
+                <hr class="divider--light">
+                <div class="row triplecol__row disqualify__row row--smallcol">
+                    <input type="text" id="monkBox" th:value="${ssiInfo != null}? ${ssiInfo[monk]} : ''" class="mainBox" hidden="true" readonly>
+                    <div class="checkboxContainer checkboxContainer--false">
+                        <input type="checkbox" id="monkBoxFalse" class="checkBox disqCrit__checkBox monkcBox falseBox" th:value="${false}" disabled>
+                        <label th:text="#{no}" class="label checkBox__label label--right"> No </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer--true">
+                        <input type="checkbox" id="monkBoxTrue" class="checkBox disqCrit__checkBox monkcBox trueBox" th:value="${false}" disabled>
+                        <label th:text="#{yes}" class="label checkBox__label label--right"> Yes </label>
+                    </div>
+                    <div th:text="#{monk.description}" class="text disqCrit__text text--right"> Resident at a monastery </div>
+                </div>
+                <hr class="divider--light">
+                <div class="row triplecol__row disqualify__row row--smallcol">
+                    <input type="text" id="luxuryBox" th:value="${ssiInfo != null}? ${ssiInfo[luxury]} : ''" class="mainBox" hidden="true" readonly>
+                    <div class="checkboxContainer checkboxContainer--false">
+                        <input type="checkbox" id="luxuryBoxFalse" class="checkBox disqCrit__checkBox luxurycBox falseBox" th:value="${false}" disabled>
+                        <label th:text="#{no}" class="label checkBox__label label--right"> No </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer--true">
+                        <input type="checkbox" id="luxuryBoxTrue" class="checkBox disqCrit__checkBox luxurycBox trueBox" th:value="${false}" disabled>
+                        <label th:text="#{yes}" class="label checkBox__label label--right"> Yes </label>
+                    </div>
+                    <div th:text="#{luxury.description}" class="text disqCrit__text text--right"> Airplane, yacht owner </div>
+                </div>
+            </div>
+            <div class="submitButton">
+                <a th:href="@{'/multi/disqualifyingCrit/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+            </div> 
+            
+        <!-- </form> -->
+    </div>
+
+    <script type="text/javascript" src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+    <script type="text/javascript" src="../static/js/infoText.js" th:src="@{/js/infoText.js}"></script>
+    <script type="text/javascript" src="../static/js/navigation.js" th:src="@{/js/navigation.js}"></script>
+
+</body>
+</html>

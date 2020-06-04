@@ -1,0 +1,9 @@
+{
+    "realm": "personaldeclaration",
+    "resource" : "personal-declaration",
+    "auth-server-url": "http://localhost:9090/auth/",
+    "credentials" : {
+        "secret" : "b591c3e0-ee65-448b-842e-e2e683e5a6a1"
+     },
+    "principal-attribute" : "prefered_username"
+}

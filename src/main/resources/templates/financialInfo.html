@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{personal.info.title}">Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
+</head>
+<body>
+    <div th:replace="fragments/header"></div>
+    <div class="container">
+        <!-- <form method="post" action="#" th:action="@{/financialInfo/save}" th:object="${ssiInformation}" id="infoForm"> -->
+            <h4 th:text="#{financialInfo.info.title}" class="formTitle">Financial Info</h4>
+                <hr class="divider--light">
+            <div class="row__container"> 
+                <div class="row doublecol__row">
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{salaries}" class="label input__label"> Salaries </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[salariesR]}" />
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{salary.info.text1}"></div>
+                                <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{salary.info.text2}"></div>
+                            
+                        </div>
+                    </div>
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{pesnions}" class="label input__label"> Pensions </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[pensionsR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{pension.info.text1}"></div>
+                                <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{pension.info.text2}"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+                <div class="row doublecol__row">
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{farming}" class="label input__label"> Salaries </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[farmingR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{farming.info.text1}"></div>
+                                <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{farming.info.text2}"></div>
+                            
+                        </div>
+                    </div>
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{freelance}" class="label input__label"> Pensions </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[freelanceR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{freelance.info.text1}"></div>
+                                <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{freelance.info.text2}"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row doublecol__row">
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{rent.income}" class="label input__label"> rentIncome </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[rentIncomeR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{rent.info.text1}">
+                            </div>
+                            <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{rent.info.text2}"></div>
+                        </div>
+                    </div>
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{unemployment.benefit}" class="label input__label"> unemployment Benefit </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[unemploymentBenefitR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{unemployment.info.text1}">
+                            </div>
+                            <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{unemployment.info.text2}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row doublecol__row">
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{other.benefits}" class="label input__label"> other Benefits </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[otherBenefitsR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{other.benefits.info.text}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{ekas}" class="label input__label"> ekas </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[ekasR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{ekas.info.text1}">
+                            </div>
+                            <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{ekas.info.text2}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row doublecol__row">
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{other.income}" class="label input__label"> other Income </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[otherIncomeR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{other.income.info.text1}">
+                            </div>
+                            <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{other.income.info.text2}"></div>
+                        </div>
+                    </div>
+                    <div class="inputContainer inputContainer--big">
+                        <label th:text="#{ergome}" class="label input__label"> ergome </label>
+                        <div class="inputContainerInfo">
+                            <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[ergomeR]}" readonly/>
+                            <div class="infoButton__wrapper">
+                                <div class="infoButton input__info" th:text="i" >i</div>
+                            </div>
+                        </div>
+                        <div class="infoTextBox" style="display:none;">
+                            <div class="inftoTextContainer" th:text="#{ergome.info.text1}">
+                            </div>
+                            <hr class="divider--light">
+                                <div class="inftoTextContainer" th:text="#{ergome.info.text2}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row button__row">
+                <div class="fetchButton">
+                    <a th:href="@{'/financialInfo/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
+                </div>
+                <div class="submitButton">
+                    <a th:href="@{'/financialInfo/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
+    <script type="text/javascript" src="../static/js/infoText.js" th:src="@{/js/infoText.js}"></script>
+    <script type="text/javascript" src="../static/js/navigation.js" th:src="@{/js/navigation.js}"></script>
+</body>
+</html>
