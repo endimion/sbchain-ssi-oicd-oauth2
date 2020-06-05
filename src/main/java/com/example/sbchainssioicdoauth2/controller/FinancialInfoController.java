@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/financialInfo")
+@RequestMapping("/multi/financialInfo")
 public class FinancialInfoController {
 
     @Autowired
@@ -62,7 +62,7 @@ public class FinancialInfoController {
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
-        return new ModelAndView("redirect:/assetInfo/view");
+        return new ModelAndView("redirect:/multi/assetInfo/view");
     }
 
 }

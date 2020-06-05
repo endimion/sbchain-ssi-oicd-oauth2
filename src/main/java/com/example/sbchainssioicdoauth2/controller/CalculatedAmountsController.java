@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/amounts")
+@RequestMapping("/multi/amounts")
 public class CalculatedAmountsController {
 
     @Autowired

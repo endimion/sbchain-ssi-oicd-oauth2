@@ -91,7 +91,7 @@ public class ResidenceInfoController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/electricityBill/view");
+        return new ModelAndView("redirect:/multi/electricityBill/view");
     
     }
 

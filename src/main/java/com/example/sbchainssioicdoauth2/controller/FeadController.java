@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/fead")
+@RequestMapping("/multi/fead")
 public class FeadController {
     
     private static final String SSI_REQUEST_PARAMS = "ssiInformation";
@@ -60,7 +60,7 @@ public class FeadController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/employment/view");
+        return new ModelAndView("redirect:/multi/employment/view");
     
     }
 }

@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/householdInfo")
+@RequestMapping("/multi/householdInfo")
 public class HouseholdController {
 
     // @Autowired
@@ -66,7 +66,7 @@ public class HouseholdController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/notifications/view");
+        return new ModelAndView("redirect:/multi/notifications/view");
     }
 
     // private FinancialInfo fillFinancialInfo(OidcUser user){

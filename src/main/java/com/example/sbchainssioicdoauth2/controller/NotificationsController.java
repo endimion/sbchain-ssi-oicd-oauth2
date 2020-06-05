@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/notifications")
+@RequestMapping("/multi/notifications")
 public class NotificationsController {
 
     // @Autowired
@@ -72,7 +72,7 @@ public class NotificationsController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/amounts/view");
+        return new ModelAndView("redirect:/multi/amounts/view");
     }
 
 }

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/electricityBill")
+@RequestMapping("/multi/electricityBill")
 public class ElectricityBillController {
 
     @Autowired
@@ -63,7 +63,7 @@ public class ElectricityBillController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/fead/view");
+        return new ModelAndView("redirect:/multi/fead/view");
     }
 
 }

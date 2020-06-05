@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/parenthood")
+@RequestMapping("/multi/parenthood")
 public class ParenthoodController {
     
     @Autowired
@@ -54,7 +54,7 @@ public class ParenthoodController {
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
-        return new ModelAndView("redirect:/financialInfo/view");
+        return new ModelAndView("redirect:/multi/financialInfo/view");
     
     }
 }

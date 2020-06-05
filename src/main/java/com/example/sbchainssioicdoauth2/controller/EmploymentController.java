@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/employment")
+@RequestMapping("/multi/employment")
 public class EmploymentController {
     
     @Autowired
@@ -54,7 +54,7 @@ public class EmploymentController {
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
-        return new ModelAndView("redirect:/contactDetails/view");
+        return new ModelAndView("redirect:/multi/contactDetails/view");
     
     }
 }

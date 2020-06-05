@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/assetInfo")
+@RequestMapping("/multi/assetInfo")
 public class AssetInfoController {
     @Autowired
     CacheService cacheService;
@@ -61,6 +61,6 @@ public class AssetInfoController {
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
-        return new ModelAndView("redirect:/householdInfo/view");
+        return new ModelAndView("redirect:/multi/householdInfo/view");
     }
 }

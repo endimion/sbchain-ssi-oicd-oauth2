@@ -62,10 +62,10 @@
 
         <div class="row button__row">
             <div class="fetchButton">
-                <a th:href="@{'/electricityBill/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
+                <a th:href="@{'/multi/electricityBill/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
             </div>
             <div class="submitButton">
-                <a th:href="@{'/electricityBill/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+                <a th:href="@{'/multi/electricityBill/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
             </div>
         </div>
     <!-- </form> -->
