@@ -1,10 +1,11 @@
 package com.example.sbchainssioicdoauth2.controller;
 
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.example.sbchainssioicdoauth2.model.RequestParams;
 import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
@@ -18,7 +19,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -54,10 +54,13 @@ public class PersonalInformationController {
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         
-        //String something = resourceService.getSomething(context);
-        //log.info("ddddddddddddddddddddddddd something string :{}", something);
-        log.info("zzzzzzzzzzzzzzzzzzzzzz user :{}",  oidcUser);
-        log.info("eeeeeeeeeeeeeeeeeeeeeee otherclaims :{}", context.getIdToken().getOtherClaims());
+        // String something = resourceService.getSomething(context);
+        // Map<String, Object> personalInfo = resourceService.getPersonalInfo(context);
+        // Map<String, Object> claims = resourceService.getClaims(context);
+        // log.info("ddddddddddddddddddddddddd something string :{}", something);
+        // log.info("zzzzzzzzzzzzzzzzzzzzzz personal info :{}",  personalInfo);
+        // log.info("ccccccccccccccccccccccc claims ? :{}",  claims);
+        // log.info("eeeeeeeeeeeeeeeeeeeeeee otherclaims :{}", context.getIdToken().getOtherClaims());
        
         // log.info("gggggggggggggggggggg attributes :{}", oidcUser.getAttributes());
         // params.setSsiInfo(oidcUser.getAttributes());
@@ -84,7 +87,6 @@ public class PersonalInformationController {
         
         try {
             request.logout();
-            log.info("logged out ???");
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
