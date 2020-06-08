@@ -1,9 +1,9 @@
 {
-    "realm": "residence_info",
-    "resource" : "residence-info-client",
+    "realm": "fead",
+    "resource" : "fead-client",
     "auth-server-url": "http://localhost:9090/auth/",
     "credentials" : {
-        "secret" : "621e0ab7-47db-4210-be85-1e822ef1b063"
+        "secret" : "a6fd9f9c-0e88-498b-8d29-26856c527be0"
      },
     "principal-attribute" : "prefered_username"
 }

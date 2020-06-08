@@ -14,6 +14,7 @@ import com.example.sbchainssioicdoauth2.utils.FormType;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
@@ -40,46 +41,37 @@ public class PersonalInformationController {
     @Autowired
     PopulateInfoService infoService;
 
-    private static final String SSI_REQUEST_PARAMS = "ssiInformation";
-
+    @PreAuthorize("hasAuthority('personal_info')")
     @GetMapping("/view")
-    protected ModelAndView personalInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView personalInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
 
         model.addAttribute("uuid", uuid);
         return new ModelAndView("personalInfo");
     }
 
+    @PreAuthorize("hasAuthority('personal_info')")
     @GetMapping("/results")
-    protected ModelAndView personalInfoResults(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView personalInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         
         // String something = resourceService.getSomething(context);
         // Map<String, Object> personalInfo = resourceService.getPersonalInfo(context);
         // Map<String, Object> claims = resourceService.getClaims(context);
-        // log.info("ddddddddddddddddddddddddd something string :{}", something);
-        // log.info("zzzzzzzzzzzzzzzzzzzzzz personal info :{}",  personalInfo);
-        // log.info("ccccccccccccccccccccccc claims ? :{}",  claims);
-        // log.info("eeeeeeeeeeeeeeeeeeeeeee otherclaims :{}", context.getIdToken().getOtherClaims());
-       
-        // log.info("gggggggggggggggggggg attributes :{}", oidcUser.getAttributes());
-        // params.setSsiInfo(oidcUser.getAttributes());
-        // model.addAttribute("ssiInfo", oidcUser.getAttributes());
+        
         model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
         model.addAttribute("uuid", uuid);
 
         return new ModelAndView("personalInfo");
     }
 
+    @PreAuthorize("hasAuthority('personal_info')")
     @GetMapping("/save")
-    protected ModelAndView personalInfoSubmit(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) {
+    protected ModelAndView personalInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) {
 
-        // model.addAttribute("userAttr", oidcUser.getAttributes());
         
         attr.addAttribute("uuid", uuid);
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-        
-        log.info("ppppppppppppppppppppppppppp uuid :{}", uuid);
         SsiApplication ssiApp = new SsiApplication();
         infoService.populateSsiApp(ssiApp, context, FormType.PERSONAL_INFO.value, uuid);
         cacheService.putInfo(ssiApp, uuid);

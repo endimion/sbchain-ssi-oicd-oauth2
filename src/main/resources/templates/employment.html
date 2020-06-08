@@ -44,12 +44,17 @@
                 </div>
             </div>
         </div>
-        <div class="submitButton">
-            <a th:href="@{'/multi/employment/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+        <div class="row button__row">
+            <div class="fetchButton">
+                <a th:href="@{'/multi/employment/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
+            </div>
+            <div class="submitButton">
+                <a th:href="@{'/multi/employment/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+            </div>
         </div>
     <!-- </form> -->
     </div>
-
+    <div th:replace="fragments/footer"></div>
     <script type="text/javascript" src="../static/js/main.js" th:src="@{/js/main.js}"></script> 
     <script type="text/javascript" src="../static/js/navigation.js" th:src="@{/js/navigation.js}"></script>
 </body>

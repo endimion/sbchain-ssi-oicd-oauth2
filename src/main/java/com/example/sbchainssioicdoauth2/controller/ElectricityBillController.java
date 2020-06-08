@@ -35,13 +35,13 @@ public class ElectricityBillController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView electricityBillInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView electricityBillInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         model.addAttribute("uuid", uuid);
         return new ModelAndView("electricityBill");
     }
     
     @GetMapping("/results")
-    protected ModelAndView electricityBillInfoResults(@AuthenticationPrincipal OAuth2User oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView electricityBillInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
         infoService.populateFetchInfo(model, request, uuid);
         return new ModelAndView("electricityBill");
@@ -49,7 +49,7 @@ public class ElectricityBillController {
     }
     
     @GetMapping("/save")
-    protected ModelAndView electricityBillInfoSubmit(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView electricityBillInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
 
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

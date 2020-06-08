@@ -15,17 +15,13 @@ public class CacheService {
 
     @CachePut(value="ssiApp", key="#uuid")
     public SsiApplication putInfo(SsiApplication ssiApp, String uuid){
-        log.info("fffffffffffffffffffffffffff cache put app:{}", ssiApp);
-        log.info("fffffffffffffffffffffffffff cache put uuid:{}", uuid);
+        log.debug("put cache with uuid :{}", uuid);
         return ssiApp;
     }
 
     @Cacheable(value="ssiApp", key="#uuid")
     public SsiApplication get(String uuid){
         SsiApplication ssiApp = new SsiApplication();
-        log.info("fffffffffffffffffffffffffff Cacheable app:{}", ssiApp);
-        log.info("fffffffffffffffffffffffffff Cacheable uuid:{}", uuid);
-        //SsiApplication ssiApp
         return ssiApp;
     }
 

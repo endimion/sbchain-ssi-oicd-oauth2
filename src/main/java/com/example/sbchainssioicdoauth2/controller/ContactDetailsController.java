@@ -37,14 +37,24 @@ public class ContactDetailsController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView contactDetailsView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
-        infoService.populateFetchInfo(model, request, uuid);
+    protected ModelAndView contactDetailsView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        model.addAttribute("uuid", uuid);
         
         return new ModelAndView("contactDetails");
     }
 
+    @GetMapping("/results")
+    protected ModelAndView disqualifyingInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        
+        infoService.populateFetchInfo(model, request, uuid);
+        model.addAttribute("email", context.getIdToken().getEmail());
+
+        return new ModelAndView("contactDetails");
+    }
+
     @GetMapping("/save")
-    protected ModelAndView contactDetailsSave(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView contactDetailsSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

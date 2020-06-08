@@ -1,6 +1,7 @@
 package com.example.sbchainssioicdoauth2.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +21,6 @@ public class PopulateInfoService {
     public void populateFetchInfo(ModelMap model, HttpServletRequest request, String uuid){
 
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-
         model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
         model.addAttribute("uuid", uuid);
     }
@@ -32,8 +32,8 @@ public class PopulateInfoService {
         if(formType.equals(FormType.PERSONAL_INFO.value)){
             ssiApp.setSsn(String.valueOf(context.getIdToken().getOtherClaims().get("ssn")));
             ssiApp.setAfm(String.valueOf(context.getIdToken().getOtherClaims().get("afm")));
-            ssiApp.setSurname(String.valueOf(context.getIdToken().getOtherClaims().get("family_name")));
-            ssiApp.setName(String.valueOf(context.getIdToken().getOtherClaims().get("given_name")));
+            ssiApp.setSurname(context.getIdToken().getFamilyName());
+            ssiApp.setName(context.getIdToken().getGivenName());
             ssiApp.setFatherName(String.valueOf(context.getIdToken().getOtherClaims().get("fatherName")));
             ssiApp.setMotherName(String.valueOf(context.getIdToken().getOtherClaims().get("motherName")));
             ssiApp.setLatinSurname(String.valueOf(context.getIdToken().getOtherClaims().get("latinSurname")));
@@ -77,11 +77,17 @@ public class PopulateInfoService {
             ssiApp.setOaedDate(String.valueOf(context.getIdToken().getOtherClaims().get("oaedDate")));
         }
         if(formType.equals(FormType.CONTACT_INFO.value)){
-            ssiApp.setEmail(String.valueOf(context.getIdToken().getOtherClaims().get("email")));
+            ssiApp.setEmail(String.valueOf(context.getIdToken().getEmail()));
             ssiApp.setMobilePhone(String.valueOf(context.getIdToken().getOtherClaims().get("mobilePhone")));
             ssiApp.setLandline(String.valueOf(context.getIdToken().getOtherClaims().get("landline")));
             ssiApp.setIban(String.valueOf(context.getIdToken().getOtherClaims().get("iban")));
-            ssiApp.setMailAddress((HashMap<String, String>) context.getIdToken().getOtherClaims().get("mailAddress"));
+            Map<String, String> mailAddress = new HashMap<>();
+            mailAddress.put("street", String.valueOf(context.getIdToken().getOtherClaims().get("street")));
+            mailAddress.put("streetNumber", String.valueOf(context.getIdToken().getOtherClaims().get("streetNumber")));
+            mailAddress.put("PO", String.valueOf(context.getIdToken().getOtherClaims().get("PO")));
+            mailAddress.put("municipality", String.valueOf(context.getIdToken().getOtherClaims().get("municipality")));
+            mailAddress.put("prefecture", String.valueOf(context.getIdToken().getOtherClaims().get("prefecture")));
+            ssiApp.setMailAddress(mailAddress);
         }
         if(formType.equals(FormType.PARENTHOOD_INFO.value)){
             ssiApp.setParenthood(String.valueOf(context.getIdToken().getOtherClaims().get("parenthood")));
@@ -112,7 +118,9 @@ public class PopulateInfoService {
         }
 
         if(formType.equals(FormType.HOUSEHOLD_COMPOSITION.value)){
-            ssiApp.setHouseholdComposition((HashMap<String, String>) context.getIdToken().getOtherClaims().get("householdComposition"));
+            Map<String, String> householdComposition = new HashMap<>();
+            householdComposition.put(String.valueOf(context.getIdToken().getOtherClaims().get("member")), String.valueOf(context.getIdToken().getOtherClaims().get("relation")));
+            ssiApp.setHouseholdComposition(householdComposition);
         }
         if(formType.equals(FormType.INCOME_GUARANTEE.value)){
             ssiApp.setMonthlyGuarantee(String.valueOf(context.getIdToken().getOtherClaims().get("monthlyGuarantee")));

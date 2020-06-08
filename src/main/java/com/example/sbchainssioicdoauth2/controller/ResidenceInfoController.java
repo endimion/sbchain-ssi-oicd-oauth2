@@ -29,8 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/multi/residenceInfo")
 public class ResidenceInfoController {
 
-    private static final String SSI_REQUEST_PARAMS = "ssiInformation";
-
     @Autowired
     CacheService cacheService;
     
@@ -38,46 +36,23 @@ public class ResidenceInfoController {
     PopulateInfoService infoService;
     
     @GetMapping("/view")
-    protected ModelAndView residenceInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session){
+    protected ModelAndView residenceInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session){
 
-        log.info("kkkkkkkkkkkkkkkkkkkkk disqCriteria after in residence info :{}", request.getSession().getAttribute("disqCriteria"));
-        log.info("kkkkkkkkkkkkkkkkkkkkk disqCriteria session after logout residence info :{}", session.getAttribute("disqCriteria"));
         model.addAttribute("uuid", uuid);
         return new ModelAndView("residenceInfo");
     }
     
     @GetMapping("/results")
-    protected ModelAndView residenceInfoResults(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView residenceInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
-
-       
-        
-        // KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-        // log.info("rrrrrrrrrrrrrrrrrrrrrrrrr otherclaims residence :{}", context.getIdToken().getOtherClaims());
-        // log.info("rrrrrrrrrrrrrrrrrrrrrrrrr name residence:{}", context.getIdToken().getName());
-        // log.info("zzzzzzzzzzzzzzzzzzzzzz context :{}", context);
-        //log.info("zzzzzzzzzzzzzzzzzzzzzz oidcUser :{}", oidcUser.getAttributes());
-        // log.info("zzzzzzzzzzzzzzzzzzzzzz token :{}", context.getIdToken());
-        // log.info("zzzzzzzzzzzzzzzzzzzzzz name :{}", context.getIdToken().getOtherClaims());
-        // params.setSsiInfo(context.getIdToken(). getOtherClaims());
-        // model.addAttribute("userAttr", context.getIdToken().getOtherClaims());
-
-        //request.getSession().setAttribute("residenceInformation", residenceInfo);
-        //params.setSsiInfo(oidcUser.getAttributes());
-        //params.setSsiInfo(context.getIdToken().getOtherClaims());
-        //params.setSsiInfo(oidcUser.getAttributes());
-        // KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-        // model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
-        // model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
-        log.info("dddddddddddddddddddddd after populate :{}", model.getAttribute("uuid"));
 
         return new ModelAndView("residenceInfo");
     
     }
 
     @GetMapping("/save")
-    protected ModelAndView residenceInfoSave(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request){
+    protected ModelAndView residenceInfoSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request){
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);
@@ -94,33 +69,4 @@ public class ResidenceInfoController {
         return new ModelAndView("redirect:/multi/electricityBill/view");
     
     }
-
-    // private ResidenceInfo fillResidenceInfo(OidcUser user, RequestParams params){
-    //     ResidenceInfo residenceInfo = new ResidenceInfo();
-
-    //     residenceInfo.setStreet(user.getAttribute("street"));
-    //     residenceInfo.setStreetNumber(user.getAttribute("streetNumber"));
-    //     residenceInfo.setPo(user.getAttribute("po"));
-    //     residenceInfo.setMunicipality(user.getAttribute("municipality"));
-    //     residenceInfo.setPrefecture(user.getAttribute("prefecture"));
-    //     residenceInfo.setOwnership(user.getAttribute("ownership"));
-    //     residenceInfo.setSupplyType(String.valueOf(params.getSsiInfo().get("supplyType")));
-    //     residenceInfo.setMeterNumber(String.valueOf(params.getSsiInfo().get("meterNumber")));
-
-    //     return residenceInfo;
-    // }
-
-    private void fillResidenceInfo(SsiApplication ssiApp, KeycloakSecurityContext context){
-        
-        ssiApp.setStreet(String.valueOf(context.getIdToken().getOtherClaims().get("street")));
-        ssiApp.setStreetNumber(String.valueOf(context.getIdToken().getOtherClaims().get("streetNumber")));
-        ssiApp.setPo(String.valueOf(context.getIdToken().getOtherClaims().get("po")));
-        ssiApp.setMunicipality(String.valueOf(context.getIdToken().getOtherClaims().get("municipality")));
-        ssiApp.setPrefecture(String.valueOf(context.getIdToken().getOtherClaims().get("prefecture")));
-        ssiApp.setOwnership(String.valueOf(context.getIdToken().getOtherClaims().get("ownership")));
-        ssiApp.setSupplyType(String.valueOf(context.getIdToken().getOtherClaims().get("supplyType")));
-        ssiApp.setMeterNumber(String.valueOf(context.getIdToken().getOtherClaims().get("meterNumber")));
-
-    }
-    
 }

@@ -35,13 +35,21 @@ public class EmploymentController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView feadView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
-        infoService.populateFetchInfo(model, request, uuid);
+    protected ModelAndView employmentView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        model.addAttribute("uuid", uuid);
         return new ModelAndView("employment");
     }
 
+    @GetMapping("/results")
+    protected ModelAndView employmentResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        
+        infoService.populateFetchInfo(model, request, uuid);
+        return new ModelAndView("employment");
+    
+    }
+
     @GetMapping("/save")
-    protected ModelAndView feadSave(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView employmentSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

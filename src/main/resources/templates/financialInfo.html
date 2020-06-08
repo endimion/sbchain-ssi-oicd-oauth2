@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="inputContainer inputContainer--big">
-                        <label th:text="#{pesnions}" class="label input__label"> Pensions </label>
+                        <label th:text="#{pensions}" class="label input__label"> Pensions </label>
                         <div class="inputContainerInfo">
                             <input type="text" class="input personalInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[pensionsR]}" readonly/>
                             <div class="infoButton__wrapper">
@@ -182,6 +182,7 @@
             </div>
         <!-- </form> -->
     </div>
+    <div th:replace="fragments/footer"></div>
     <script type="text/javascript" src="../static/js/infoText.js" th:src="@{/js/infoText.js}"></script>
     <script type="text/javascript" src="../static/js/navigation.js" th:src="@{/js/navigation.js}"></script>
 </body>

@@ -1,9 +1,9 @@
 {
-    "realm": "residence_info",
-    "resource" : "residence-info-client",
+    "realm": "household_info",
+    "resource" : "household-info-client",
     "auth-server-url": "http://localhost:9090/auth/",
     "credentials" : {
-        "secret" : "621e0ab7-47db-4210-be85-1e822ef1b063"
+        "secret" : "d7c6e4fd-9637-4ca3-87e5-f6a88a7724b3"
      },
     "principal-attribute" : "prefered_username"
 }

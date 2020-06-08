@@ -34,13 +34,13 @@ public class AssetInfoController {
     PopulateInfoService infoService;
     
     @GetMapping("/view")
-    protected ModelAndView financialInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView financialInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         model.addAttribute("uuid", uuid);
         return new ModelAndView("assetInfo");
     }
     
     @GetMapping("/results")
-    protected ModelAndView financialInfoResults(@AuthenticationPrincipal OAuth2User oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView financialInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
         infoService.populateFetchInfo(model, request, uuid);
         return new ModelAndView("assetInfo");
@@ -48,7 +48,7 @@ public class AssetInfoController {
     }
     
     @GetMapping("/save")
-    protected ModelAndView financialInfoSubmit(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView financialInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
 
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

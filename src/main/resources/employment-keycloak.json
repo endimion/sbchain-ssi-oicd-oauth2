@@ -1,9 +1,9 @@
 {
-    "realm": "residence_info",
-    "resource" : "residence-info-client",
+    "realm": "employment_info",
+    "resource" : "employment-info-client",
     "auth-server-url": "http://localhost:9090/auth/",
     "credentials" : {
-        "secret" : "621e0ab7-47db-4210-be85-1e822ef1b063"
+        "secret" : "50e4ed0a-2ed8-4889-af30-e10a69100638"
      },
     "principal-attribute" : "prefered_username"
 }

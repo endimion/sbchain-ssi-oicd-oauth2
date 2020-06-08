@@ -2,6 +2,10 @@ body{
     margin: 0;
     color:rgba(0, 0, 0, 0.726);
     font-family: 'Times New Roman', Times, serif;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    
 }
 
 #header{
@@ -14,9 +18,30 @@ body{
     margin-bottom: 2rem;
 }
 
+
 #headerTitle{
     color:white;
     margin: auto;
+}
+
+
+#footer{
+    background-color: #0275d8;
+    height: 3.6rem;
+    width: 100%;
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: flex-end;
+    bottom: 0;
+    color:white;
+}
+
+#logoutButton{
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem;
+    margin-right: 22rem;
+    margin-top: 0.5rem;
 }
 
 .label{
@@ -103,6 +128,8 @@ body{
     margin-top: 2rem;
     margin-bottom: 2rem;
     max-width: 75%;
+    height: 100%;
+    min-height: 70vh;
 }
 
 .text--right{
@@ -246,6 +273,7 @@ input[type="text"], .input{
 
 .full__row{
     width: 100%;
+    margin-top: 1rem;
 }
 
 .inputContainerCheckbox{

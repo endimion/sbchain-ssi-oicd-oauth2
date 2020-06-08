@@ -35,13 +35,22 @@ public class ParenthoodController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView parenthoodView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
-        infoService.populateFetchInfo(model, request, uuid);
+    protected ModelAndView parenthoodView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        model.addAttribute("uuid", uuid);
         return new ModelAndView("parenthood");
     }
 
+    @GetMapping("/results")
+    protected ModelAndView parenthoodResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        
+            infoService.populateFetchInfo(model, request, uuid);
+
+            return new ModelAndView("parenthood");
+        
+    }
+
     @GetMapping("/save")
-    protected ModelAndView parenthoodSave(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    protected ModelAndView parenthoodSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

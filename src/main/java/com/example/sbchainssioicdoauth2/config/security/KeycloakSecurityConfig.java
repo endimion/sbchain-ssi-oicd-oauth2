@@ -48,22 +48,6 @@ public class KeycloakSecurityConfig  extends KeycloakWebSecurityConfigurerAdapte
         return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
-    // @Bean
-    // protected SecurityContextLogoutHandler securityContextLogoutHandler(){
-    //   SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-    //   log.info("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk logout handler");
-    //   logoutHandler.setInvalidateHttpSession(false);
-    //   return logoutHandler;
-    // }
-
-    // @Bean
-    // public SessionAuthenticationStrategy sessionStrategy() {
-    //   SessionFixationProtectionStrategy sessionStrategy = new SessionFixationProtectionStrategy();
-    //     sessionStrategy.setMigrateSessionAttributes(true);
-    //     log.info("pppppppppppppppppppppppppp session strategy");
-    //     return sessionStrategy;
-    // }
-
     @Bean
     @Override
     @ConditionalOnMissingBean(HttpSessionManager.class)
@@ -71,20 +55,22 @@ public class KeycloakSecurityConfig  extends KeycloakWebSecurityConfigurerAdapte
         return new HttpSessionManager();
     }
 
-    // @Bean
-    // public HttpSessionEventPublisher httpSessionEventPublisher() {
-    //     return new HttpSessionEventPublisher();
-    // }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http
             .authorizeRequests()
-            .antMatchers("/multi/**").hasRole("user")
-            // .antMatchers("/multi/disqualifyingCrit/*").hasRole("personal_declaration")
-            // .antMatchers("/multi/residenceInfo/*").hasRole("user")
-            //.antMatchers("/disqualifyingCrit/*").hasRole("user")
+            .antMatchers("/multi/personalInfo/*").hasRole("personal_info")
+            .antMatchers("/multi/disqualifyingCrit/*").hasRole("personal_declaration")
+            .antMatchers("/multi/residenceInfo/*").hasRole("residence_info")
+            .antMatchers("/multi/electricityBill/*").hasRole("electricity_bill")
+            .antMatchers("/multi/fead/*").hasRole("fead_user")
+            .antMatchers("/multi/employment/*").hasRole("employment_info")
+            .antMatchers("/multi/contactDetails/*").hasRole("contact_details")
+            .antMatchers("/multi/parenthood/*").hasRole("parenthood_info")
+            .antMatchers("/multi/financialInfo/*").hasRole("financial_info")
+            .antMatchers("/multi/assetInfo/*").hasRole("asset_info")
+            .antMatchers("/multi/householdInfo/*").hasRole("household_info")
             .anyRequest().permitAll()
             .and()
             .logout()
@@ -96,83 +82,39 @@ public class KeycloakSecurityConfig  extends KeycloakWebSecurityConfigurerAdapte
     }
 
     //request debuger, remove
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.debug(true);
-    }
+    // @Override
+    // public void configure(WebSecurity web) throws Exception {
+    //     web.debug(true);
+    // }
 
-    private GrantedAuthoritiesMapper userAuthoritiesMapper() {
-      log.info("mmmmmmmmmmmmmmmmmm userAuthorities mapper :{}");
-      return (authorities) -> {
-        Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-        authorities.forEach(
+    // private GrantedAuthoritiesMapper userAuthoritiesMapper() {
+    //   return (authorities) -> {
+    //     Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+    //     authorities.forEach(
        
-            authority -> {
-              log.info("nnnnnnnnnnnnnnnnnnn oidcuserauthority :{}", authority);
-              if (authority instanceof OidcUserAuthority) {
-                OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+    //         authority -> {
+    //           if (authority instanceof OidcUserAuthority) {
+    //             OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
                 
-                OidcIdToken idToken = oidcUserAuthority.getIdToken();
-                OidcUserInfo userInfo = oidcUserAuthority.getUserInfo();
+    //             OidcIdToken idToken = oidcUserAuthority.getIdToken();
+    //             OidcUserInfo userInfo = oidcUserAuthority.getUserInfo();
   
-              //   List<SimpleGrantedAuthority> groupAuthorities =
-              //       userInfo.getClaimAsStringList("groups").stream()
-              //           .map(g -> new SimpleGrantedAuthority("ROLE_" + g.toUpperCase()))
-              //           .collect(Collectors.toList());
-               mappedAuthorities.add(new SimpleGrantedAuthority("user"));
+    //           //   List<SimpleGrantedAuthority> groupAuthorities =
+    //           //       userInfo.getClaimAsStringList("groups").stream()
+    //           //           .map(g -> new SimpleGrantedAuthority("ROLE_" + g.toUpperCase()))
+    //           //           .collect(Collectors.toList());
+    //            mappedAuthorities.add(new SimpleGrantedAuthority("user"));
   
-              // List<SimpleGrantedAuthority> groupAuthorities =
-              //       userInfo.getClaimAsStringList("claims").stream()
-              //           .map(g -> new SimpleGrantedAuthority("ROLE_" + g.toUpperCase()))
-              //           .collect(Collectors.toList());
-              // mappedAuthorities.addAll(groupAuthorities);
-              }
-            });
+    //           // List<SimpleGrantedAuthority> groupAuthorities =
+    //           //       userInfo.getClaimAsStringList("claims").stream()
+    //           //           .map(g -> new SimpleGrantedAuthority("ROLE_" + g.toUpperCase()))
+    //           //           .collect(Collectors.toList());
+    //           // mappedAuthorities.addAll(groupAuthorities);
+    //           }
+    //         });
   
-        return mappedAuthorities;
-      };
-    }
-
-    // @Bean
-    // public FilterRegistrationBean keycloakAuthenticationProcessingFilterRegistrationBean(
-    //         KeycloakAuthenticationProcessingFilter filter) {
-    //             log.info("11111111111111111111111 keycloakAuthenticationProcessingFilterRegistrationBean");
-    //     FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-    //     registrationBean.setEnabled(false);
-    //     return registrationBean;
-    // }
-
-    // @Bean
-    // public FilterRegistrationBean keycloakPreAuthActionsFilterRegistrationBean(
-    //         KeycloakPreAuthActionsFilter filter) {
-    //             log.info("2222222222222222222222222222 keycloakPreAuthActionsFilterRegistrationBean");
-    //     FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-    //     registrationBean.setEnabled(false);
-    //     return registrationBean;
-    // }
-
-    // @Bean
-    // public FilterRegistrationBean keycloakAuthenticatedActionsFilterBean(
-    //         KeycloakAuthenticatedActionsFilter filter) {
-    //             log.info("3333333333333333333333333333333333 keycloakAuthenticatedActionsFilterBean");
-    //     FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-    //     registrationBean.setEnabled(false);
-    //     return registrationBean;
-    // }
-
-    // @Bean
-    // public FilterRegistrationBean keycloakSecurityContextRequestFilterBean(
-    //     KeycloakSecurityContextRequestFilter filter) {
-    //         log.info("444444444444444444444444444444444444 keycloakSecurityContextRequestFilterBean");
-    //     FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-    //     registrationBean.setEnabled(false);
-    //     return registrationBean;
-    // }
-    // @Bean
-    // protected KeycloakAuthenticationProcessingFilter keycloakAuthenticationProcessingFilter() throws Exception {
-    //   KeycloakAuthenticationProcessingFilter filter = new KeycloakAuthenticationProcessingFilter(authenticationManagerBean());
-    //   filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy());
-    //   return filter;
+    //     return mappedAuthorities;
+    //   };
     // }
     
 }

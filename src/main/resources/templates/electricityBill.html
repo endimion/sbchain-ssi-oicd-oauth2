@@ -27,7 +27,35 @@
                 </ul>
             </div>
         </div>
-        <div class="row__container"> 
+        <div class="row__container">
+            <div class="row full__row">
+                <div class="inputContainer inputContainer--big">
+                    <label th:text="#{ownership}" class="label checkBox__label label--right"> Ownership </label>
+                    <div class="inputContainerCheckbox">
+                        <input type="text" id="ownershipMain" th:value="${ssiInfo != null}? ${ssiInfo[ownership]}" readonly hidden="true">
+                        <div class="checkboxContainer ownership__checkboxContainer " id="ownerBoxContainer">
+                            <input type="checkbox" id="owner" class="checkBox ownership__checkBox ownerBox" th:value="${false}" disabled>
+                            <label th:text="#{owner}" class="label checkBox__label label--right"> Owner </label>
+                        </div>  
+                        <div class="checkboxContainer ownership__checkboxContainer" id="rentBoxContainer">
+                            <input type="checkbox" id="rent" class="checkBox ownership__checkBox rentBox" th:value="${false}" disabled>
+                            <label th:text="#{rent}" class="label checkBox__label label--right"> Rent </label>
+                        </div>
+                        <div class="checkboxContainer ownership__checkboxContainer" id="freeBoxContainer">
+                            <input type="checkbox" id="free" class="checkBox ownership__checkBox freeBox" th:value="${false}" disabled>
+                            <label th:text="#{free.residency}" class="label checkBox__label label--right"> Free residency </label>
+                        </div>
+                        <div class="checkboxContainer ownership__checkboxContainer " id="guestBoxContainer">
+                            <input type="checkbox" id="guest" class="checkBox ownership__checkBox guestBox" th:value="${false}" disabled>
+                            <label th:text="#{guest}" class="label checkBox__label label--right"> guest </label>
+                        </div>
+                        <div class="checkboxContainer ownership__checkboxContainer" id="homelessBoxContainer">
+                            <input type="checkbox" id="homeless" class="checkBox ownership__checkBox homelessBox" th:value="${false}" disabled>
+                            <label th:text="#{homeless}" class="label checkBox__label label--right"> homeless </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row full__row">
                 <div class="inputContainer inputContainer--full">
                     <label th:text="#{power.supply}" class="label checkBox__label label--right"> Power Supply </label>
@@ -70,6 +98,7 @@
         </div>
     <!-- </form> -->
     </div>
+    <div th:replace="fragments/footer"></div>
     <script type="text/javascript" src="../static/js/infoText.js" th:src="@{/js/infoText.js}"></script>
     <script type="text/javascript" src="../static/js/navigation.js" th:src="@{/js/navigation.js}"></script>
     <script type="text/javascript">

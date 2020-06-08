@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
+import com.example.sbchainssioicdoauth2.service.SubmitService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
 
 import org.keycloak.KeycloakSecurityContext;
@@ -31,34 +32,47 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/multi/householdInfo")
 public class HouseholdController {
 
-    // @Autowired
-    // CacheService cacheService;
-
     @Autowired
     CacheService cacheService;
     
     @Autowired
     PopulateInfoService infoService;
 
-    private static final String SSI_REQUEST_PARAMS = "ssiInformation";
+    @Autowired
+    private SubmitService submitService;
     
     @GetMapping("/view")
-    protected ModelAndView householdInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
-        infoService.populateFetchInfo(model, request, uuid);
+    protected ModelAndView householdInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        model.addAttribute("uuid", uuid);
         return new ModelAndView("householdInfo");
     }
     
-    @GetMapping("/save")
-    protected ModelAndView householdInfoSubmit(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+    @GetMapping("/results")
+    protected ModelAndView householdInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        
+        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        Map<String, String> householdComposition = new HashMap<>();
+        householdComposition.put(String.valueOf(context.getIdToken().getOtherClaims().get("member")), String.valueOf(context.getIdToken().getOtherClaims().get("relation")));
+        model.addAttribute("ssiInfo", householdComposition);
+        model.addAttribute("uuid", uuid);
 
-        //model.addAttribute("userAttr", oidcUser.getAttributes());
-        // FinancialInfo financialInfo = fillFinancialInfo(oidcUser);
+        infoService.populateFetchInfo(model, request, uuid);
+        return new ModelAndView("householdInfo");
+        
+    }
+
+    @GetMapping("/save")
+    protected ModelAndView householdInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
 
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, context, FormType.HOUSEHOLD_COMPOSITION.value, uuid);
-        cacheService.putInfo(ssiApp, uuid);
-        attr.addAttribute("uuid", uuid);
+        // cacheService.putInfo(ssiApp, uuid);
+        // attr.addAttribute("uuid", uuid);
+
+        submitService.submit(ssiApp);
+        cacheService.evictSsiAppCache(uuid);
+        model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
 
         try {
             request.logout();
@@ -66,30 +80,8 @@ public class HouseholdController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/multi/notifications/view");
+        //return new ModelAndView("redirect:/multi/notifications/view");
+        return new ModelAndView("redirect:/");
     }
-
-    // private FinancialInfo fillFinancialInfo(OidcUser user){
-        
-    //     FinancialInfo financialInfo = new FinancialInfo();
-    //     financialInfo.setSalariesR(user.getAttribute("salariesR"));
-    //     financialInfo.setPensionsR(user.getAttribute("pensionsR"));
-    //     financialInfo.setFarmingR(user.getAttribute("farmingR"));
-    //     financialInfo.setFreelanceR(user.getAttribute("freelanceR"));
-    //     financialInfo.setRentIncomeR(user.getAttribute("rentIncomeR"));
-    //     financialInfo.setUnemploymentBenefitR(user.getAttribute("unemploymentBenefitR"));
-    //     financialInfo.setOtherBenefitsR(user.getAttribute("otherBenefitsR"));
-    //     financialInfo.setEkasR(user.getAttribute("ekasR"));
-    //     financialInfo.setOtherIncomeR(user.getAttribute("otherIncomeR"));
-    //     financialInfo.setErgomeR(user.getAttribute("ergomeR"));
-    //     financialInfo.setDepositInterestA(user.getAttribute("depositInterestA"));
-    //     financialInfo.setDepositsA(user.getAttribute("depositsA"));
-    //     financialInfo.setDomesticRealEstateA(user.getAttribute("domesticRealEstateA"));
-    //     financialInfo.setForeignRealEstateA(user.getAttribute("foreignRealEstateA"));
-    //     financialInfo.setVehicleValueA(user.getAttribute("vehicleValueA"));
-    //     financialInfo.setInvestmentsA(user.getAttribute("investmentsA"));
-
-    //     return financialInfo;
-    // }
 
 }

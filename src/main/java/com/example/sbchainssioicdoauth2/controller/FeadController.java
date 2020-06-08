@@ -29,8 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/multi/fead")
 public class FeadController {
     
-    private static final String SSI_REQUEST_PARAMS = "ssiInformation";
-    private static final String FEAD_PARAMS = "feadInfo";
 
     @Autowired
     CacheService cacheService;
@@ -39,14 +37,22 @@ public class FeadController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView feadView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
-        infoService.populateFetchInfo(model, request, uuid);
+    protected ModelAndView feadView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        model.addAttribute("uuid", uuid);
         
         return new ModelAndView("fead");
     }
 
+    @GetMapping("/results")
+    protected ModelAndView feadResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request){
+        
+        infoService.populateFetchInfo(model, request, uuid);
+        return new ModelAndView("fead");
+    
+    }
+
     @GetMapping("/save")
-    protected ModelAndView feadSave(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request){
+    protected ModelAndView feadSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request){
         
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         SsiApplication ssiApp = cacheService.get(uuid);

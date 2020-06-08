@@ -1,9 +1,9 @@
 {
-    "realm": "residence_info",
-    "resource" : "residence-info-client",
+    "realm": "electricity_bill",
+    "resource" : "electricity-bill-client",
     "auth-server-url": "http://localhost:9090/auth/",
     "credentials" : {
-        "secret" : "621e0ab7-47db-4210-be85-1e822ef1b063"
+        "secret" : "62671401-7f1c-40d2-9547-61976f530c2f"
      },
     "principal-attribute" : "prefered_username"
 }

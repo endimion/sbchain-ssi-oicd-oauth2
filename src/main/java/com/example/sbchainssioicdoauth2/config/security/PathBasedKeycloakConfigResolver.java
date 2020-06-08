@@ -16,24 +16,29 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 
     private Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<String, KeycloakDeployment>();
 
+    public final static String BASE_URL= "http://localhost:8080/";
+
     @Override
     public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
         
         // InputStream is = getClass().getResourceAsStream("/keycloak.json");
         // KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
         // return deployment;
-        log.info("ssssssssssssssssssssssssssss relative path :{}", request.getRelativePath());
         if(request.getRelativePath().equals("/")){
             return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
         }
         String path = request.getURI();
         if(request.getHeader("referer") != null && !(path.contains("sso") || path.contains("multi")) ){
             path = request.getHeader("referer");
+            if(request.getHeader("referer").equals(BASE_URL)){
+                return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
+            }
         }
-        log.info("xxxxxxxxxxxxxxxxxxxxxxxxx path :{}", path);
-        log.info("zzzzzzzzzzzzzzzzzzzzzzzzz request referer:{}", request.getHeader("referer"));
+        // if(path.equals(BASE_URL)){
+        //     return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
+        // }
+
         int multitenantIndex = path.indexOf("multi/");
-        log.info("yyyyyyyyyyyyyyyyyyyyyyyyy index :{}", multitenantIndex);
         // if (multitenantIndex == -1) {
         //     throw new IllegalStateException("Not able to resolve realm from the request path!");
         // }
@@ -51,9 +56,7 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 
         KeycloakDeployment deployment = cache.get(realm);
 
-        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaa deployment :{}", deployment);
         if (null == deployment) {
-            log.info("sssssssssssssssssssssssss realm in if :{}", realm);
             // not found on the simple cache, try to load it from the file system
             InputStream is = getClass().getResourceAsStream("/" + realm + "-keycloak.json");
             if (is == null) {
@@ -64,7 +67,6 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
             
         }
         cache.put("sso", deployment);
-        log.info("ddddddddddddddddddddddddddd cache end :{}", cache);
         return deployment;
     }
 
