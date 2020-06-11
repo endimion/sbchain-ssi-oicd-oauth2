@@ -1,7 +1,5 @@
 package com.example.sbchainssioicdoauth2.controller;
 
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,10 +13,9 @@ import com.example.sbchainssioicdoauth2.utils.FormType;
 import org.keycloak.KeycloakSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,15 +49,15 @@ public class PersonalInformationController {
     @PreAuthorize("hasAuthority('personal_info')")
     @GetMapping("/results")
     protected ModelAndView personalInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-        
-        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        infoService.populateFetchInfo(model, request, uuid);
+        //KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
         
         // String something = resourceService.getSomething(context);
         // Map<String, Object> personalInfo = resourceService.getPersonalInfo(context);
         // Map<String, Object> claims = resourceService.getClaims(context);
         
-        model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
-        model.addAttribute("uuid", uuid);
+        // model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
+        // model.addAttribute("uuid", uuid);
 
         return new ModelAndView("personalInfo");
     }

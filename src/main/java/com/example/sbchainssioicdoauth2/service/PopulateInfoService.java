@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.example.sbchainssioicdoauth2.config.MyResourceNotFoundException;
 import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.utils.FormType;
 
@@ -21,12 +22,19 @@ public class PopulateInfoService {
     public void populateFetchInfo(ModelMap model, HttpServletRequest request, String uuid){
 
         KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        
+        if(context.getIdToken() == null || context.getIdToken().getOtherClaims().isEmpty()){
+            throw new MyResourceNotFoundException("resource not found or claims are empty");
+        }
         model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
         model.addAttribute("uuid", uuid);
     }
 
     public void populateSsiApp(SsiApplication ssiApp, KeycloakSecurityContext context, String formType, String uuid){
 
+        if(context.getIdToken() == null || context.getIdToken().getOtherClaims().isEmpty()){
+            throw new MyResourceNotFoundException("resource not found or claims are empty");
+        }
         ssiApp.setUuid(uuid);
 
         if(formType.equals(FormType.PERSONAL_INFO.value)){

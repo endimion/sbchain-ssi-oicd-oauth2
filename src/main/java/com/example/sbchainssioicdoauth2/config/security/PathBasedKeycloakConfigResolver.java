@@ -21,27 +21,18 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
     @Override
     public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
         
-        // InputStream is = getClass().getResourceAsStream("/keycloak.json");
-        // KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
-        // return deployment;
-        if(request.getRelativePath().equals("/")){
+        if(request.getRelativePath().equals("/") || request.getRelativePath().equals("/error")){
             return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
         }
         String path = request.getURI();
         if(request.getHeader("referer") != null && !(path.contains("sso") || path.contains("multi")) ){
             path = request.getHeader("referer");
-            if(request.getHeader("referer").equals(BASE_URL)){
+            if(request.getHeader("referer").equals(BASE_URL) || request.getHeader("referer").endsWith("error")){
                 return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
             }
         }
-        // if(path.equals(BASE_URL)){
-        //     return KeycloakDeploymentBuilder.build(getClass().getResourceAsStream("/personalinfo-keycloak.json"));
-        // }
 
         int multitenantIndex = path.indexOf("multi/");
-        // if (multitenantIndex == -1) {
-        //     throw new IllegalStateException("Not able to resolve realm from the request path!");
-        // }
 
         String realm = "";
         if (multitenantIndex != -1) {

@@ -44,6 +44,13 @@ body{
     margin-top: 0.5rem;
 }
 
+#logoutButtonError{
+    color: white;
+    text-decoration: none;
+    padding: 0 auto;
+    margin: auto 0;
+}
+
 .label{
     white-space: nowrap;
 }
@@ -132,6 +139,18 @@ body{
     min-height: 70vh;
 }
 
+.errorMsgContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+}
+
+.errorTitle{
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
 .text--right{
     margin-left: 1rem;
 }
@@ -218,6 +237,18 @@ input[type="text"], .input{
     text-align: center; 
     margin: auto;
 }
+
+#errorLogoutButton, errorLogoutButton:visited, errorLogoutButton:active{
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center; 
+    margin: auto;
+}
+
 
 .submitButton{
     background-color: #5cb85c;
