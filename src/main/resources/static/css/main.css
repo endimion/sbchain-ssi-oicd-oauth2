@@ -9,6 +9,17 @@ body{
 }
 
 #header{
+    /*background-color: #0275d8;*/
+    height: 10rem;
+    width: 100%;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    position:relative;
+    /*margin-bottom: 2rem;*/
+}
+
+#headerFooter{
     background-color: #0275d8;
     height: 10rem;
     width: 100%;

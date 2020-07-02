@@ -1,9 +1,10 @@
 {
-    "realm": "personal_declaration",
-    "resource" : "personal-declaration",
-    "auth-server-url": "http://localhost:9090/auth/",
-    "credentials" : {
-        "secret" : "df4e9f52-78cc-4f71-8fad-12b9204a932e"
-     },
-    "principal-attribute" : "prefered_username"
+  "realm": "SSI-SELF",
+  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "ssl-required": "external",
+  "resource": "sbchain-self",
+  "credentials": {
+    "secret": "8163c64a-834d-4b8c-88be-976055720116"
+  },
+  "confidential-port": 0
 }
