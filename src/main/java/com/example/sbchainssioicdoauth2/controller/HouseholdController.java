@@ -66,25 +66,16 @@ public class HouseholdController {
 //        return new ModelAndView("householdInfo");
 //
 //    }
-    @GetMapping("/save")
+    @GetMapping("/continue")
     protected ModelAndView householdInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.HOUSEHOLD_COMPOSITION.value, uuid);
-//        // cacheService.putInfo(ssiApp, uuid);
-//        // attr.addAttribute("uuid", uuid);
-//
-//        submitService.submit(ssiApp);
-//        cacheService.evictSsiAppCache(uuid);
-//        model.addAttribute("ssiInfo", context.getIdToken().getOtherClaims());
         try {
             request.logout();
         } catch (ServletException e) {
             log.error(e.getMessage());
         }
 
-        //return new ModelAndView("redirect:/multi/notifications/view");
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
+//        return new ModelAndView("redirect:/");
     }
 
 }

@@ -25,29 +25,32 @@
                             <th class="tableHeader householdHeader householdHeader--number" th:text="'#'"></th>
                             <th class="tableHeader householdHeader householdHeader--member" th:text="#{household.member}"></th>
                             <th class="tableHeader householdHeader householdHeader--relation" th:text="#{household.member.relation}"></th>
-                            <th class="tableHeader householdHeader householdHeader--empty"></th>
                         </tr>
                     </thead>
                     <tbody th:if="${houseHoldInfo}" >
-                        <tr  th:each="item, iter : ${houseHoldInfo}">
-                            <td class="column column__1" th:text="${iter.count}"></td>
-                            <td class="column column__2" th:text="${item.key}"></td>
+                        <tr th:each="member, counter : ${houseHoldInfo}">
+                            <td class="column column__1" th:text="${counter.count}"></td>
+                            <span th:each="item, iter : ${member}">
                             <td class="column column__3" th:text="${item.value}"></td>
-                            <td class="column column__4" ></td>
+                        </span>
                         </tr>
+                        
                     </tbody>
                 </table>
             </div>
             <div class="row button__row">
-                <div class="fetchButton">
+<!--                <div class="fetchButton">
                     <a th:href="@{'/multi/householdInfo/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
-                </div>
+                </div>-->
                 <!-- <div class="submitButton">
                     <a th:href="@{'/multi/householdInfo/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
                 </div> -->
-                <div class="submitFinalButton">
+<!--                <div class="submitFinalButton">
                     <a th:href="@{'/multi/householdInfo/save?uuid='+${uuid}}" th:text="#{submit}" class="submitFinal">Fetch Info</a>
-                </div>
+                </div>-->
+            <div class="submitButton">
+                <a th:href="@{'/multi/householdInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>
             </div>
         </div>
         <div th:replace="fragments/footer"></div>
