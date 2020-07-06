@@ -1,9 +1,10 @@
 {
-    "realm": "contact_details",
-    "resource" : "contact-details-client",
-    "auth-server-url": "http://localhost:9090/auth/",
-    "credentials" : {
-        "secret" : "6fcfecf6-39ab-4d13-b8a2-ad344c1559f2"
-     },
-    "principal-attribute" : "prefered_username"
+  "realm": "SSI-CONTACT",
+  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "ssl-required": "external",
+  "resource": "sbchain-contact",
+  "credentials": {
+    "secret": "b008eb7e-7d6b-471d-8f8b-38b6b98070c8"
+  },
+  "confidential-port": 0
 }

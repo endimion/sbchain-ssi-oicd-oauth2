@@ -4,6 +4,8 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,12 +31,12 @@ public class ResidenceInfoController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView residenceInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) {
-
+    protected ModelAndView residenceInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvocationTargetException, IntrospectionException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("residenceInfo");
     }
@@ -48,7 +50,7 @@ public class ResidenceInfoController {
 
     }
 
-    @GetMapping("/save")
+    @GetMapping("/continue")
     protected ModelAndView residenceInfoSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request) {
 
 //        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
@@ -62,7 +64,7 @@ public class ResidenceInfoController {
             log.error(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/multi/electricityBill/view");
+        return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
 
     }
 }

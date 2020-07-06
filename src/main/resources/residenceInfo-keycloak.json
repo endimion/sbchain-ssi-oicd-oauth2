@@ -1,9 +1,10 @@
 {
-    "realm": "residence_info",
-    "resource" : "residence-info-client",
-    "auth-server-url": "http://localhost:9090/auth/",
-    "credentials" : {
-        "secret" : "621e0ab7-47db-4210-be85-1e822ef1b063"
-     },
-    "principal-attribute" : "prefered_username"
+  "realm": "SSI-Taxis",
+  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "ssl-required": "external",
+  "resource": "sbchain-taxis",
+  "credentials": {
+    "secret": "89d53c54-0825-4b29-9b9d-65f621654f92"
+  },
+  "confidential-port": 0
 }

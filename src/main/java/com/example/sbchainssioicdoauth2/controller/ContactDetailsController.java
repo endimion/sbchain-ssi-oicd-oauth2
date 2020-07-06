@@ -4,6 +4,8 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +31,12 @@ public class ContactDetailsController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView contactDetailsView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView contactDetailsView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("contactDetails");
     }

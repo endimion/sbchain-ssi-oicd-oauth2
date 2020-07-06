@@ -4,7 +4,8 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
-import javax.servlet.ServletException;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +29,29 @@ public class ElectricityBillController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView electricityBillInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView electricityBillInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
+//        model.addAttribute("uuid", uuid);
+//        infoService.populateFetchInfo(model, request, uuid);
+//        SsiApplication ssiApp = cacheService.get(uuid);
+//        infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+//        cacheService.putInfo(ssiApp, uuid);
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model);
         cacheService.putInfo(ssiApp, uuid);
+
         return new ModelAndView("electricityBill");
     }
 
-    @GetMapping("/results")
-    protected ModelAndView electricityBillInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-
-        infoService.populateFetchInfo(model, request, uuid);
-        return new ModelAndView("electricityBill");
-
-    }
-
+//    @GetMapping("/results")
+//    protected ModelAndView electricityBillInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+//
+//        infoService.populateFetchInfo(model, request, uuid);
+//        return new ModelAndView("electricityBill");
+//
+//    }
     @GetMapping("/save")
     protected ModelAndView electricityBillInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
 
@@ -53,13 +60,12 @@ public class ElectricityBillController {
 //        infoService.populateSsiApp(ssiApp, context, FormType.ELECTRICITY_BILL_INFO.value, uuid);
 //        cacheService.putInfo(ssiApp, uuid);
 //        attr.addAttribute("uuid", uuid);
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-
-        return new ModelAndView("redirect:/multi/fead/view");
+//        try {
+//            request.logout();
+//        } catch (ServletException e) {
+//            log.error(e.getMessage());
+//        }
+        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
     }
 
 }

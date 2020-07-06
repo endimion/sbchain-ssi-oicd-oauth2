@@ -34,7 +34,7 @@
                     <div class="inputContainerCheckbox">
                         <input type="text" id="ownershipMain" th:value="${ssiInfo != null}? ${ssiInfo[ownership]}" readonly hidden="true">
                         <div class="checkboxContainer ownership__checkboxContainer " id="ownerBoxContainer">
-                            <input type="checkbox" id="owner" class="checkBox ownership__checkBox ownerBox" th:value="${false}" disabled>
+                            <input type="checkbox" id="owned" class="checkBox ownership__checkBox ownerBox" th:value="${false}" disabled>
                             <label th:text="#{owner}" class="label checkBox__label label--right"> Owner </label>
                         </div>  
                         <div class="checkboxContainer ownership__checkboxContainer" id="rentBoxContainer">
@@ -62,7 +62,7 @@
                     <div class="inputContainerCheckbox">
                         <input type="text" id="powerMain" th:value="${ssiInfo != null}? ${ssiInfo[supplyType]}" readonly hidden="true">
                         <div class="checkboxContainer power__checkboxContainer " id="deddieBoxContainer">
-                            <input type="checkbox" id="deddie" class="checkBox power__checkBox ownerBox" th:value="${false}" disabled>
+                            <input type="checkbox" id="power" class="checkBox power__checkBox ownerBox" th:value="${false}" disabled>
                             <label th:text="#{deddie}" class="label checkBox__label label--right"> DEDDIE </label>
                         </div>  
                         <div class="checkboxContainer power__checkboxContainer" id="settlementBoxContainer">

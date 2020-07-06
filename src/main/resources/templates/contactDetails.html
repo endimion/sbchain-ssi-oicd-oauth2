@@ -18,7 +18,7 @@
                 <div class="inputContainer inputContainer--big">
                     <label th:text="#{email}" class="label input__label"> email </label>
                     <div class="inputContainerInfo">
-                        <input type="text" class="input contactDetailsInfo__input input--big" th:value="${email != null}? ${email}" readonly />
+                        <input type="text" class="input contactDetailsInfo__input input--big" th:value="${ssiInfo != null}? ${ssiInfo[email]}" readonly />
                         <div class="infoButton__wrapper">
                             <div class="infoButton input__info" th:text="i" >i</div>
                         </div>
