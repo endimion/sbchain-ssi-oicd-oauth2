@@ -7,6 +7,7 @@ import com.example.sbchainssioicdoauth2.utils.FormType;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,16 +31,11 @@ public class ElectricityBillController {
 
     @GetMapping("/view")
     protected ModelAndView electricityBillInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
-//        model.addAttribute("uuid", uuid);
-//        infoService.populateFetchInfo(model, request, uuid);
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
 
         return new ModelAndView("electricityBill");
@@ -52,7 +48,7 @@ public class ElectricityBillController {
 //        return new ModelAndView("electricityBill");
 //
 //    }
-    @GetMapping("/save")
+    @GetMapping("/continue")
     protected ModelAndView electricityBillInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
 
 //        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
@@ -68,4 +64,15 @@ public class ElectricityBillController {
         return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
     }
 
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/householdInfo/view?uuid=" + uuid);
+    }
 }

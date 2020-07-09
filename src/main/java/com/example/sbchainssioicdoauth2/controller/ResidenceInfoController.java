@@ -4,9 +4,9 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class ResidenceInfoController {
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("residenceInfo");
     }
@@ -52,19 +52,20 @@ public class ResidenceInfoController {
 
     @GetMapping("/continue")
     protected ModelAndView residenceInfoSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request) {
-
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.RESIDENCE_INFO.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
-//        attr.addAttribute("uuid", uuid);
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getEmail());
         return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
+    }
 
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
     }
 }

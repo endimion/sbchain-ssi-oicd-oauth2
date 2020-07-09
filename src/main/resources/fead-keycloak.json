@@ -1,9 +1,10 @@
 {
-    "realm": "fead",
-    "resource" : "fead-client",
-    "auth-server-url": "http://localhost:9090/auth/",
-    "credentials" : {
-        "secret" : "a6fd9f9c-0e88-498b-8d29-26856c527be0"
-     },
-    "principal-attribute" : "prefered_username"
+  "realm": "SSI-SELF",
+  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "ssl-required": "external",
+  "resource": "sbchain-self",
+  "credentials": {
+    "secret": "8163c64a-834d-4b8c-88be-976055720116"
+  },
+  "confidential-port": 0
 }

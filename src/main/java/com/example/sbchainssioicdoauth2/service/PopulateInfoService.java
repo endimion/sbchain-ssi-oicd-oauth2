@@ -11,15 +11,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+import org.thymeleaf.util.StringUtils;
 
 @Slf4j
 @Service
 public class PopulateInfoService {
+
+    @Autowired
+    DBService dbServ;
 
     public void populateFetchInfo(ModelMap model, HttpServletRequest request, String uuid) {
 
@@ -37,9 +43,22 @@ public class PopulateInfoService {
 
     }
 
-    public ModelMap mergeModelFromCache(SsiApplication cachedSsiApp, ModelMap map) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException, IntrospectionException, IntrospectionException {
+    public ModelMap mergeModelFromCache(SsiApplication cachedSsiApp, ModelMap map, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException, IntrospectionException, IntrospectionException {
 
         if (map.get("ssiInfo") != null) {
+
+            //check if this is an already completed application
+            final Principal principal = request.getUserPrincipal();
+            if (principal instanceof KeycloakAuthenticationToken) {
+                KeycloakAuthenticationToken kp = (KeycloakAuthenticationToken) principal;
+                kp.getAccount().getKeycloakSecurityContext().getIdToken().getOtherClaims();
+                Map<String, Object> otherClaims = kp.getAccount().getKeycloakSecurityContext().getIdToken().getOtherClaims();
+                Optional<SsiApplication> oldApp = dbServ.getByTaxisAfm((String) otherClaims.get("taxisAfm"));
+                if (oldApp.isPresent()) {
+                    oldApp.get().setCompleted(true);
+                    cachedSsiApp = oldApp.get();
+                }
+            }
 
             BeanInfo beanInfo = Introspector.getBeanInfo(SsiApplication.class);
             for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
@@ -74,7 +93,7 @@ public class PopulateInfoService {
             ssiApp.setTaxisFathersNameLatin(getStringIfNotNull(otherClaims.get("taxisFathersNameLatin"), ssiApp.getTaxisFathersNameLatin()));
             ssiApp.setTaxisMothersNameLatin(getStringIfNotNull(otherClaims.get("taxisMothersNameLatin"), ssiApp.getTaxisMothersNameLatin()));
             ssiApp.setTaxisDateOfBirth(getStringIfNotNull(otherClaims.get("taxisDateOfBirth"), ssiApp.getTaxisDateOfBirth()));
-            ssiApp.setGender(getStringIfNotNull(otherClaims.get("taxisGender"), ssiApp.getTaxisGender()));
+            ssiApp.setTaxisGender(getStringIfNotNull(otherClaims.get("taxisGender"), ssiApp.getTaxisGender()));
             ssiApp.setNationality(getStringIfNotNull(otherClaims.get("nationality"), ssiApp.getNationality()));
             ssiApp.setMaritalStatus(getStringIfNotNull(otherClaims.get("maritalStatus"), ssiApp.getMaritalStatus()));
             ssiApp.setDisabilityStatus(getStringIfNotNull(otherClaims.get("disabilityStatus"), ssiApp.getDisabilityStatus()));
@@ -93,7 +112,7 @@ public class PopulateInfoService {
 
 //            if (formType.equals(FormType.FEAD.value)) {
             ssiApp.setParticipateFead(getStringIfNotNull(otherClaims.get("participateFead"), ssiApp.getParticipateFead()));
-            ssiApp.setSelectProvider(getStringIfNotNull(otherClaims.get("selectProvider"), ssiApp.getSelectProvider()));
+            ssiApp.setSelectProvider(getStringIfNotNull(otherClaims.get("feadProvider"), ssiApp.getSelectProvider()));
 
 //            if (formType.equals(FormType.ELECTRICITY_BILL_INFO.value)) {
             ssiApp.setOwnership(getStringIfNotNull(otherClaims.get("ownership"), ssiApp.getOwnership()));
@@ -101,18 +120,20 @@ public class PopulateInfoService {
             ssiApp.setMeterNumber(getStringIfNotNull(otherClaims.get("meterNumber"), ssiApp.getMeterNumber()));
 //            if (formType.equals(FormType.EMPLOYMENT_INFO.value)) {
             ssiApp.setEmploymentStatus(getStringIfNotNull(otherClaims.get("employmentStatus"), ssiApp.getEmploymentStatus()));
-            ssiApp.setUnemployed(getStringIfNotNull(otherClaims.get("unemployed"), ssiApp.getUnemployed()));
-            ssiApp.setOaedId(getStringIfNotNull(otherClaims.get("oaedId"), ssiApp.getOaedId()));
+            ssiApp.setUnemployed(getStringIfNotNull(StringUtils.isEmpty((String) otherClaims.get("employed")) ? false : true, ssiApp.getUnemployed()));
+            ssiApp.setEmployed(getStringIfNotNull(otherClaims.get("employed"), ssiApp.getEmployed()));
+            ssiApp.setOaedId(getStringIfNotNull(otherClaims.get("oaedid"), ssiApp.getOaedId()));
             ssiApp.setOaedDate(getStringIfNotNull(otherClaims.get("oaedDate"), ssiApp.getOaedDate()));
+            ssiApp.setPo(getStringIfNotNull(otherClaims.get("po"), ssiApp.getPo()));
 //            if (formType.equals(FormType.CONTACT_INFO.value)) {
-            ssiApp.setEmail(getStringIfNotNull(otherClaims.get("email"), ssiApp.getEmail()));
+            ssiApp.setEmail(getStringIfNotNull(otherClaims.get("contact-email"), ssiApp.getEmail()));
             ssiApp.setMobilePhone(getStringIfNotNull(otherClaims.get("mobilePhone"), ssiApp.getMobilePhone()));
             ssiApp.setLandline(getStringIfNotNull(otherClaims.get("landline"), ssiApp.getLandline()));
             ssiApp.setIban(getStringIfNotNull(otherClaims.get("iban"), ssiApp.getIban()));
             Map<String, String> mailAddress = new HashMap<>();
             mailAddress.put("street", getStringIfNotNull(otherClaims.get("street"), ssiApp.getStreet()));
             mailAddress.put("streetNumber", getStringIfNotNull(otherClaims.get("streetNumber"), ssiApp.getStreetNumber()));
-            mailAddress.put("PO", getStringIfNotNull(otherClaims.get("PO"), ssiApp.getPo()));
+            mailAddress.put("PO", getStringIfNotNull(otherClaims.get("po"), ssiApp.getPo()));
             mailAddress.put("municipality", getStringIfNotNull(otherClaims.get("municipality"), ssiApp.getMunicipality()));
             mailAddress.put("prefecture", getStringIfNotNull(otherClaims.get("prefecture"), ssiApp.getPrefecture()));
             ssiApp.setMailAddress(mailAddress);

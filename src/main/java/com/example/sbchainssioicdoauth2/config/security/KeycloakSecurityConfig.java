@@ -49,16 +49,18 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         http
                 .authorizeRequests()
                 .antMatchers("/multi/personalInfo/*").hasRole("personal_info")
-                .antMatchers("/multi/disqualifyingCrit/*").hasRole("personal_declaration")
-                .antMatchers("/multi/financialInfo/*").hasRole("financial_info")
-                .antMatchers("/multi/assetInfo/*").hasRole("financial_info")
-                .antMatchers("/multi/householdInfo/*").hasRole("financial_info")
-                .antMatchers("/multi/electricityBill/*").hasRole("electricity_bill")
-                .antMatchers("/multi/residenceInfo/*").hasRole("electricity_bill")
-                .antMatchers("/multi/contactDetails/*").hasRole("contact_details")
-                .antMatchers("/multi/fead/*").hasRole("fead_user")
-                .antMatchers("/multi/employment/*").hasRole("employment_info")
-                .antMatchers("/multi/parenthood/*").hasRole("parenthood_info")
+                .antMatchers("/multi/disqualifyingCrit/*").hasRole("personal_info")
+                .antMatchers("/multi/employment/*").hasRole("personal_info")
+                .antMatchers("/multi/financialInfo/*").hasRole("personal_info")
+                .antMatchers("/multi/assetInfo/*").hasRole("personal_info")
+                .antMatchers("/multi/householdInfo/*").hasRole("personal_info")
+                .antMatchers("/multi/electricityBill/*").hasRole("personal_info")
+                .antMatchers("/multi/residenceInfo/*").hasRole("personal_info")
+                .antMatchers("/multi/contactDetails/*").hasRole("personal_info")
+                .antMatchers("/multi/parenthood/*").hasRole("personal_info")
+                .antMatchers("/multi/fead/*").hasRole("personal_info")
+                .antMatchers("/multi/amounts/*").hasRole("personal_info")
+                .antMatchers("/db/*").permitAll()
                 //                .antMatchers("/multi/householdInfo/*").hasRole("household_info")
 
                 .antMatchers("/static/*").permitAll()
@@ -69,9 +71,15 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .and()
                 .sessionManagement()
                 .sessionFixation().migrateSession()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .and()
+                .csrf().disable().cors();
     }
 
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/multi/amounts/*").antMatchers("/static/*");
+//    }
     //request debuger, remove
     // @Override
     // public void configure(WebSecurity web) throws Exception {

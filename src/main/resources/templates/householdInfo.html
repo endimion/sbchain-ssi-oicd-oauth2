@@ -9,6 +9,9 @@
 <body>
     <div th:replace="fragments/header"></div>
     <div class="container">
+           <div th:replace="fragments/navigation"></div>
+        
+        
             <div class="formTitleContainer">
                 <h2 th:text="#{household.info.title}" class="formTitle">Disqualifying Criteria</h2>
                 <div class="infoButton" th:text="i" id="infoButton">i</div>
@@ -48,9 +51,16 @@
 <!--                <div class="submitFinalButton">
                     <a th:href="@{'/multi/householdInfo/save?uuid='+${uuid}}" th:text="#{submit}" class="submitFinal">Fetch Info</a>
                 </div>-->
-            <div class="submitButton">
+<!--            <div class="submitButton">
                 <a th:href="@{'/multi/householdInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/householdInfo/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/householdInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
             </div>
         </div>
         <div th:replace="fragments/footer"></div>

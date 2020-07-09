@@ -4,10 +4,11 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.KeycloakSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ContactDetailsController {
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("contactDetails");
     }
@@ -51,20 +52,23 @@ public class ContactDetailsController {
         return new ModelAndView("contactDetails");
     }
 
-    @GetMapping("/save")
+    @GetMapping("/continue")
     protected ModelAndView contactDetailsSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getParenthood());
+        return new ModelAndView("redirect:/multi/parenthood/view?uuid=" + uuid);
 
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.CONTACT_INFO.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
-//        attr.addAttribute("uuid", uuid);
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-        return new ModelAndView("redirect:/multi/parenthood/view");
+    }
 
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/parenthood/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
     }
 }

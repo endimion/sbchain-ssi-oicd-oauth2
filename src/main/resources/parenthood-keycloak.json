@@ -1,9 +1,10 @@
 {
-    "realm": "parenthood_info",
-    "resource" : "parenthood-info-client",
-    "auth-server-url": "http://localhost:9090/auth/",
-    "credentials" : {
-        "secret" : "1ffac2ad-16a6-4d14-96d6-29688d0c11e7"
-     },
-    "principal-attribute" : "prefered_username"
+  "realm": "SSI-MITRO",
+  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "ssl-required": "external",
+  "resource": "sbchain-mitro",
+  "credentials": {
+    "secret": "34030392-d03e-4322-850f-45aba52c6c2c"
+  },
+  "confidential-port": 0
 }

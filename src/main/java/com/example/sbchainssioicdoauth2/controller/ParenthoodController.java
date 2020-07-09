@@ -4,8 +4,10 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
-import javax.servlet.ServletException;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,11 +30,12 @@ public class ParenthoodController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView parenthoodView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView parenthoodView(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, IntrospectionException, InvocationTargetException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("parenthood");
     }
@@ -46,22 +49,28 @@ public class ParenthoodController {
 
     }
 
-    @GetMapping("/save")
+    @GetMapping("/continue")
     protected ModelAndView parenthoodSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-//
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.PARENTHOOD_INFO.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
-//        attr.addAttribute("uuid", uuid);
-
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
+//        try {
+//            request.logout();
+//        } catch (ServletException e) {
+//            log.error(e.getMessage());
+//        }
 //        return new ModelAndView("redirect:/multi/financialInfo/view");
-        return new ModelAndView("redirect:/multi/residenceInfo/view");
+//        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
+        return new ModelAndView("redirect:/multi/amounts/view?uuid=" + uuid);
 
+    }
+
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/amounts/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
     }
 }

@@ -9,6 +9,8 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
     <!-- <form method="post" action="#" th:action="@{/residenceInfo/save}" th:object="${ssiInformation}" id="infoForm"> -->
+        <div th:replace="fragments/navigation"></div>
+    
         <div class="formTitleContainer">
             <h4 th:text="#{residence.info.title}" class="formTitle">Disqualifying Criteria</h4>
             <div class="infoButton" th:text="i" id="resInfoButton">i</div>
@@ -32,7 +34,7 @@
                 <div class="inputContainer inputContainer--mid">
                     <label th:text="#{po.number}" class="label input__label"> PO Number </label>
                     <div class="inputContainerInfo">
-                        <input type="text" class="input residence__input input--mid" th:value="${ssiInfo != null}? ${ssiInfo[PO]}" readonly/>
+                        <input type="text" class="input residence__input input--mid" th:value="${ssiInfo != null}? ${ssiInfo[po]}" readonly/>
                         <div class="infoButton__wrapper">
                             <div class="infoButton input__info" th:text="i" id="resInfoButton">i</div>
                         </div>
@@ -72,9 +74,16 @@
 <!--            <div class="fetchButton">
                 <a th:href="@{'/multi/residenceInfo/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
             </div>-->
-            <div class="submitButton">
+<!--            <div class="submitButton">
                 <a th:href="@{'/multi/residenceInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+            </div>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/residenceInfo/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/residenceInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
         </div>
     <!-- </form> -->
     </div>

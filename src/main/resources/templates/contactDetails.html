@@ -9,6 +9,8 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
     <!-- <form method="post" action="#" th:action="@{/contactDetails/save}" th:object="${contactInfo}" id="infoForm"> -->
+       <div th:replace="fragments/navigation"></div>
+    
         <div class="formTitleContainer">
             <h4 th:text="#{contact.details.title}" class="formTitle">Contact Details</h4>
         </div>
@@ -114,12 +116,20 @@
                 </div>
             </div>
         <div class="row button__row">
-            <div class="fetchButton">
+<!--            <div class="fetchButton">
                 <a th:href="@{'/multi/contactDetails/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
-            </div>
-            <div class="submitButton">
+            </div>-->
+<!--            <div class="submitButton">
                 <a th:href="@{'/multi/contactDetails/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
+            </div>-->
+             <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/contactDetails/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/contactDetails/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
+
         </div>
     <!-- </form> -->
     </div>

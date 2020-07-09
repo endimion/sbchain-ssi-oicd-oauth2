@@ -2,15 +2,16 @@ package com.example.sbchainssioicdoauth2.controller;
 
 import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
+import com.example.sbchainssioicdoauth2.service.DBService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
-import com.example.sbchainssioicdoauth2.service.SubmitService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class HouseholdController {
     PopulateInfoService infoService;
 
     @Autowired
-    private SubmitService submitService;
+    private DBService submitService;
 
     @GetMapping("/view")
     protected ModelAndView householdInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalArgumentException, InvocationTargetException, IntrospectionException, IllegalAccessException, JsonProcessingException {
@@ -41,7 +42,7 @@ public class HouseholdController {
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
 
         Map<String, String>[] householdComposition = ssiApp.getHouseholdComposition();
@@ -68,14 +69,21 @@ public class HouseholdController {
 //    }
     @GetMapping("/continue")
     protected ModelAndView householdInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getSupplyType());
         return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
-//        return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/assetInfo/view?uuid=" + uuid);
     }
 
 }

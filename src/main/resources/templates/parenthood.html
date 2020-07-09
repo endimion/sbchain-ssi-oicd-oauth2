@@ -10,7 +10,9 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
         <!-- <form method="post" action="#" th:action="@{/parenthood/save}" th:object="${parenthoodInfo}" id="infoForm"> -->
-            <div class="formTitleContainer">
+       <div th:replace="fragments/navigation"></div>
+        
+        <div class="formTitleContainer">
                 <h2 th:text="#{parenthood.title}" class="formTitle">Disqualifying Criteria</h2>
             </div>
             <hr class="divider--light">
@@ -41,12 +43,19 @@
                 </div>
             </div>
             <div class="row button__row">
-                <div class="fetchButton">
+<!--                <div class="fetchButton">
                     <a th:href="@{'/multi/parenthood/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
-                </div>
-                <div class="submitButton">
+                </div>-->
+<!--                <div class="submitButton">
                     <a th:href="@{'/multi/parenthood/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
-                </div>
+                </div>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/parenthood/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/parenthood/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
             </div>
         <!-- </form> -->
     </div>

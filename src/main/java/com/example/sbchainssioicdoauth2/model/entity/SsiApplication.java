@@ -64,6 +64,7 @@ public class SsiApplication {
     //employment info
     private String employmentStatus;
     private String unemployed;
+    private String employed;
     private String oaedId;
     private String oaedDate;
 
@@ -105,5 +106,11 @@ public class SsiApplication {
     private String totalIncome;
     private String monthlyIncome;
     private String monthlyAid;
+
+    // helper object
+    private boolean completed;
+
+    //the status of the application
+    private String status;
 
 }

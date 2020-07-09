@@ -5,7 +5,9 @@ import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.service.ResourceService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
-import javax.servlet.ServletException;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -37,12 +39,13 @@ public class PersonalInformationController {
     private final static Logger log = LoggerFactory.getLogger(PersonalInformationController.class);
 
     @GetMapping("/view")
-    protected ModelAndView personalInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView personalInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
-        SsiApplication ssiApp = infoService.populateSsiApp(new SsiApplication(), request, FormType.PERSONAL_INFO.value, uuid);
+        SsiApplication ssiApp = cacheService.get(uuid);
+        infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
-
         return new ModelAndView("personalInfo");
     }
 
@@ -61,12 +64,15 @@ public class PersonalInformationController {
     @GetMapping("/continue")
     protected ModelAndView personalInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
             ModelMap model, HttpServletRequest request, HttpSession session) {
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-//        log.info("GOT the uuid" + uuid);
+
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getHospitalized());
+        return new ModelAndView("redirect:/multi/disqualifyingCrit/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
         return new ModelAndView("redirect:/multi/disqualifyingCrit/view?uuid=" + uuid);
     }
 

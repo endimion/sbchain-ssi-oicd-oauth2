@@ -2,10 +2,13 @@ package com.example.sbchainssioicdoauth2.controller;
 
 import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
+import com.example.sbchainssioicdoauth2.service.DBService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
-import com.example.sbchainssioicdoauth2.service.SubmitService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CalculatedAmountsController {
 
     @Autowired
-    private SubmitService submitService;
+    private DBService submitService;
 
     @Autowired
     CacheService cacheService;
@@ -33,11 +36,12 @@ public class CalculatedAmountsController {
     PopulateInfoService infoService;
 
     @GetMapping("/view")
-    protected ModelAndView calculatedAmountsView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+    protected ModelAndView calculatedAmountsView(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, IntrospectionException, InvocationTargetException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("calculatedAmounts");
     }
@@ -65,6 +69,11 @@ public class CalculatedAmountsController {
 //        //     log.error(e.getMessage());
 //        // }
         return new ModelAndView("calculatedAmounts");
+    }
 
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/parenthood/view?uuid=" + uuid);
     }
 }

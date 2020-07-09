@@ -10,7 +10,9 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
         <!-- <form method="post" action="#" th:action="@{/fead/save}" th:object="${feadInfo}" id="infoForm"> -->
-            <div class="formTitleContainer">
+       <div th:replace="fragments/navigation"></div>
+        
+        <div class="formTitleContainer">
                 <h2 th:text="#{fead.title}" class="formTitle">Disqualifying Criteria</h2>
                 <div class="infoButton" th:text="i" id="infoButton">i</div>
             </div>
@@ -45,12 +47,19 @@
                 </div>
             </div>
             <div class="row button__row">
-                <div class="fetchButton">
+<!--                <div class="fetchButton">
                     <a th:href="@{'/multi/fead/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
-                </div>
-                <div class="submitButton">
+                </div>-->
+<!--                <div class="submitButton">
                     <a th:href="@{'/multi/fead/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
-                </div>
+                </div>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/fead/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/fead/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
             </div>
         <!-- </form> -->
     </div>

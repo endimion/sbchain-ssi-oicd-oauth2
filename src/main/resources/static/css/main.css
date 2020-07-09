@@ -269,6 +269,33 @@ input[type="text"], .input{
     color: white;
 }
 
+
+.backButton{
+    background-color: #215bff;
+    width: 8rem;
+    height: 3.5rem;
+    border: none;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.tempButton{
+    background-color: #ab4fe4;
+    width: 8rem;
+    height: 3.5rem;
+    border: none;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+
+
+
+
+
+
+
+
 .submitFinalButton{
     background-color: #a10922;
     width: 8rem;

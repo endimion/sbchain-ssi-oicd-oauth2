@@ -9,7 +9,9 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
         <!-- <form method="post" action="#" th:action="@{/financialInfo/save}" th:object="${ssiInformation}" id="infoForm"> -->
-            <h4 th:text="#{financialInfo.info.title}" class="formTitle">Financial Info</h4>
+       <div th:replace="fragments/navigation"></div>
+        
+        <h4 th:text="#{financialInfo.info.title}" class="formTitle">Financial Info</h4>
                 <hr class="divider--light">
             <div class="row__container"> 
                 <div class="row doublecol__row">
@@ -176,9 +178,16 @@
 <!--                <div class="fetchButton">
                     <a th:href="@{'/multi/financialInfo/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
                 </div>-->
-                <div class="submitButton">
+<!--                <div class="submitButton">
                     <a th:href="@{'/multi/financialInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
-                </div>
+                </div>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/financialInfo/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/financialInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
             </div>
         <!-- </form> -->
     </div>

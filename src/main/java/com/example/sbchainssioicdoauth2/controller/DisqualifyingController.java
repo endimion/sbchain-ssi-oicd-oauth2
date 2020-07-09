@@ -7,7 +7,6 @@ import com.example.sbchainssioicdoauth2.utils.FormType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +34,11 @@ public class DisqualifyingController {
     protected ModelAndView disqualifyingInfo(@RequestParam(value = "uuid", required = true) String uuid,
             ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, IntrospectionException, JsonProcessingException {
-
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("disqCriteria");
     }
@@ -57,16 +55,28 @@ public class DisqualifyingController {
     protected ModelAndView disqualifyingInfoSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) {
 
 //        attr.addAttribute("uuid", uuid);
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error(e.getMessage());
-        }
-
+//        try {
+//            request.logout();
+//        } catch (ServletException e) {
+//            log.error(e.getMessage());
+//        }
 //        return new ModelAndView("redirect:/multi/residenceInfo/view");
 //        log.info("GOT the uuid" + uuid);
-        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid);
+//        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid); //employment
+        return new ModelAndView("redirect:/multi/employment/view?uuid=" + uuid); //employment
 
+    }
+
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/employment/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/personalInfo/view?uuid=" + uuid);
     }
 
 }

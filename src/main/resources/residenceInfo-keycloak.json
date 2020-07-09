@@ -1,6 +1,6 @@
 {
   "realm": "SSI-Taxis",
-  "auth-server-url": "https://dss1.aegean.gr/auth",
+  "auth-server-url": "https://e1b07955062c.ngrok.io/auth",
   "ssl-required": "external",
   "resource": "sbchain-taxis",
   "credentials": {

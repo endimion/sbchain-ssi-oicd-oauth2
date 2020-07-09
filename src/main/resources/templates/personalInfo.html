@@ -9,7 +9,8 @@
     <div th:replace="fragments/header"></div>
     <div class="container">
     <!-- <form method="get" action="#" th:action="@{/multi/personalInfo/save}" th:object="${ssiInformation}" id="infoForm"> -->
-        <h4 th:text="#{personal.info.title}" class="formTitle">Personal Info</h4>
+    <div th:replace="fragments/navigation"></div>    
+    <h4 th:text="#{personal.info.title}" class="formTitle">Personal Info</h4>
             <hr class="divider--light">
         <div class="row__container"> 
             <div class="row doublecol__row">
@@ -133,10 +134,21 @@
 <!--            <div class="fetchButton">
                 <a th:href="@{'/multi/personalInfo/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
             </div>-->
-            <div class="submitButton">
+<!--            <div class="submitButton">
                 <a th:href="@{'/multi/personalInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div>-->
+            
+<!--            <span th:if="${ssiInfo[completed]}"></span>
+            <span th:unless="${teacher.gender == 'F'}">Male</span>-->
+            <div class="submitButton" th:if="${ssiInfo.completed}">
+                <a th:href="@{'/multi/personalInfo/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div>
-            <!-- <input type="submit" th:value="#{next}" class="submitButton" /> -->
+
+            <div class="submitButton" th:unless="${ssiInfo.completed}">
+                <a th:href="@{'/multi/personalInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
+            </div> 
+
+
         </div>
     <!-- </form> -->
     </div>

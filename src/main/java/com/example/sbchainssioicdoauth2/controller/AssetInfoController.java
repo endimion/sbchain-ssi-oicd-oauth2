@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,8 +35,8 @@ public class AssetInfoController {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
-        infoService.populateSsiApp(ssiApp, request, FormType.ASSET_INFO.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model);
+        infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
+        infoService.mergeModelFromCache(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("assetInfo");
     }
@@ -53,5 +54,17 @@ public class AssetInfoController {
         // do not log out as they already have imported their taxis claim containing the required credentials
         // i.e. the household info
         return new ModelAndView("redirect:/multi/householdInfo/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/nextCompleted")
+    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/householdInfo/view?uuid=" + uuid);
+    }
+
+    @GetMapping("/back")
+    protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+            ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid);
     }
 }
