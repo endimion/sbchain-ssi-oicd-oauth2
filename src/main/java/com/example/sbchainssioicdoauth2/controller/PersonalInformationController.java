@@ -41,10 +41,11 @@ public class PersonalInformationController {
     @GetMapping("/view")
     protected ModelAndView personalInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
         model.addAttribute("uuid", uuid);
+        model.addAttribute("firstPage", true);
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model, request);
+        ssiApp = infoService.updateModelfromCacheMergeDB(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("personalInfo");
     }

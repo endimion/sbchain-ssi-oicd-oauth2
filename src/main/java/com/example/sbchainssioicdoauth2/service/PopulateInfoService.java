@@ -8,6 +8,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,9 @@ public class PopulateInfoService {
 
     }
 
-    public ModelMap mergeModelFromCache(SsiApplication cachedSsiApp, ModelMap map, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException, IntrospectionException, IntrospectionException {
+    public SsiApplication updateModelfromCacheMergeDB(SsiApplication cachedSsiApp, ModelMap map, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException, IntrospectionException, IntrospectionException {
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(SsiApplication.class);
 
         if (map.get("ssiInfo") != null) {
 
@@ -55,12 +58,24 @@ public class PopulateInfoService {
                 Map<String, Object> otherClaims = kp.getAccount().getKeycloakSecurityContext().getIdToken().getOtherClaims();
                 Optional<SsiApplication> oldApp = dbServ.getByTaxisAfm((String) otherClaims.get("taxisAfm"));
                 if (oldApp.isPresent()) {
-                    oldApp.get().setCompleted(true);
-                    cachedSsiApp = oldApp.get();
+                    cachedSsiApp.setSavedInDb(true);
+                    //update the values from the DB
+                    for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
+                        String propertyName = propertyDesc.getName();
+                        Object value = propertyDesc.getReadMethod().invoke(oldApp.get());
+                        try {
+                            Method setter = new PropertyDescriptor(propertyName, cachedSsiApp.getClass()).getWriteMethod();
+                            if (value != null && setter != null) {
+                                setter.invoke(cachedSsiApp, value);
+                            }
+                        } catch (IntrospectionException e) {
+                            log.error(e.getLocalizedMessage());
+                        }
+                    }
                 }
             }
 
-            BeanInfo beanInfo = Introspector.getBeanInfo(SsiApplication.class);
+            //update the view model from the cache
             for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
                 String propertyName = propertyDesc.getName();
                 Object value = propertyDesc.getReadMethod().invoke(cachedSsiApp);
@@ -69,7 +84,18 @@ public class PopulateInfoService {
                 }
             }
         }
-        return map;
+
+        if (StringUtils.isEmpty(cachedSsiApp.getStatus())) {
+            map.put("newApplication", true);
+        } else {
+            if (cachedSsiApp.getStatus().equals("temp")) {
+                map.put("temporary", true);
+            } else {
+                map.put("finalized", true);
+            }
+        }
+
+        return cachedSsiApp;
     }
 
     public SsiApplication populateSsiApp(SsiApplication ssiApp, HttpServletRequest request, String formType, String uuid) {

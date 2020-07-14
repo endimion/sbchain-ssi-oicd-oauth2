@@ -140,11 +140,9 @@
             
 <!--            <span th:if="${ssiInfo[completed]}"></span>
             <span th:unless="${teacher.gender == 'F'}">Male</span>-->
-            <div class="submitButton" th:if="${ssiInfo.completed}">
-                <a th:href="@{'/multi/personalInfo/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
-            </div>
+            
 
-            <div class="submitButton" th:unless="${ssiInfo.completed}">
+            <div class="submitButton" >
                 <a th:href="@{'/multi/personalInfo/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div> 
 

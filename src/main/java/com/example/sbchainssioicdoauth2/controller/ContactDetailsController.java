@@ -37,7 +37,7 @@ public class ContactDetailsController {
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-        infoService.mergeModelFromCache(ssiApp, model, request);
+        ssiApp = infoService.updateModelfromCacheMergeDB(ssiApp, model, request);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("contactDetails");
     }

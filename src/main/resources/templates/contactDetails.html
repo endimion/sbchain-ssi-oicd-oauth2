@@ -122,11 +122,9 @@
 <!--            <div class="submitButton">
                 <a th:href="@{'/multi/contactDetails/save?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Fetch Info</a>
             </div>-->
-             <div class="submitButton" th:if="${ssiInfo.completed}">
-                <a th:href="@{'/multi/contactDetails/nextCompleted?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
-            </div>
+           
 
-            <div class="submitButton" th:unless="${ssiInfo.completed}">
+            <div class="submitButton" >
                 <a th:href="@{'/multi/contactDetails/continue?uuid='+${uuid}}" th:text="#{next}" class="nextLink">Next</a>
             </div> 
 

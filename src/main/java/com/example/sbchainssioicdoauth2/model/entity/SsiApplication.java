@@ -108,7 +108,7 @@ public class SsiApplication {
     private String monthlyAid;
 
     // helper object
-    private boolean completed;
+    private boolean savedInDb;
 
     //the status of the application
     private String status;

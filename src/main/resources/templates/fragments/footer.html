@@ -26,8 +26,7 @@
 
     }
     
-    function saveFinal()
-    {
+    function saveFinal(){
         let uuid = /*[[${uuid}]]*/ 'default';
         var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
         var theUrl = "/db/save";
@@ -41,7 +40,9 @@
             }
         }
                 xmlhttp.send(encodeURI('uuid=' + uuid));
+
     }
+   
     /*]]>*/
     </script>
     
