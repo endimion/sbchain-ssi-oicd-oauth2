@@ -1,6 +1,8 @@
 package com.example.sbchainssioicdoauth2.model.entity;
 
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,8 @@ public class SsiApplication {
     private String id;
 
     private String uuid;
+
+    private List<CredsAndExp> credentialIds;
 
     //personal info
     private String ssn;
@@ -112,5 +116,22 @@ public class SsiApplication {
 
     //the status of the application
     private String status;
+
+    // the municipality this application was sent to
+    private String submittedMunicipality;
+
+    // the date of the application
+    private LocalDate time;
+
+    @ToString
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class CredsAndExp {
+
+        private String id;
+        private String exp;
+
+    }
 
 }

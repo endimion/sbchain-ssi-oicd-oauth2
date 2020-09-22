@@ -114,7 +114,25 @@
      <artifactId>keycloak-spring-boot-adapter-core</artifactId>
      <version>10.0.1</version>
    </dependency>
- </dependencies>
+	 <dependency>
+	  <groupId>org.web3j</groupId>
+	  <artifactId>abi</artifactId>
+	  <version>4.6.3</version>
+	  <type>jar</type>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.web3j</groupId>
+	  <artifactId>crypto</artifactId>
+	  <version>4.6.3</version>
+	  <type>jar</type>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.web3j</groupId>
+	  <artifactId>core</artifactId>
+	  <version>4.6.3</version>
+	  <type>jar</type>
+	 </dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -122,6 +140,42 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+                        
+                        
+                      <plugin>
+    <groupId>org.web3j</groupId>
+    <artifactId>web3j-maven-plugin</artifactId>
+    <version>4.5.11</version>
+    <configuration>
+        <packageName>com.example.sbchainssioicdoauth2.contracts</packageName>
+        <sourceDestination>src/main/java/generated</sourceDestination>
+        <nativeJavaType>true</nativeJavaType>
+        <outputFormat>java,bin</outputFormat>
+        <soliditySourceFiles>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.sol</include>
+            </includes>
+        </soliditySourceFiles>
+        <outputDirectory>
+            <java>src/java/generated</java>
+            <bin>src/bin/generated</bin>
+            <abi>src/abi/generated</abi>
+        </outputDirectory>
+        <contract>
+            <includes>
+                <include>VcRevocationRegistry</include>
+            </includes>
+            <excludes>
+                <exclude>mortal</exclude>
+            </excludes>
+        </contract>
+        <pathPrefixes>
+            <pathPrefix>dep=../dependencies</pathPrefix>
+        </pathPrefixes>
+    </configuration>
+</plugin>
+                        
 		</plugins>
 	</build>
 

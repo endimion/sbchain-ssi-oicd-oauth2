@@ -46,4 +46,12 @@ public class DBController {
         return "OK";
     }
 
+    @PostMapping("/delete")
+    protected @ResponseBody
+    String delete(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid) throws IllegalAccessException, IllegalArgumentException, IntrospectionException, InvocationTargetException {
+        SsiApplication ssiApp = cacheService.get(uuid);
+        submitService.delete(ssiApp);
+        return "OK";
+    }
+
 }

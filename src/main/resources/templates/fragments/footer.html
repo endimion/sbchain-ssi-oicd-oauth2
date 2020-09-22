@@ -19,12 +19,20 @@
         {
             if(xmlhttp.readyState == 4 && xmlhttp.status == 200)
             {
-                alert(xmlhttp.responseText);
+//                alert(xmlhttp.responseText);
+                location.reload();
             }
         }
                 xmlhttp.send(encodeURI('uuid=' + uuid));
 
     }
+    
+    
+    
+    
+    
+    
+    
     
     function saveFinal(){
         let uuid = /*[[${uuid}]]*/ 'default';
@@ -36,7 +44,8 @@
         {
             if(xmlhttp.readyState == 4 && xmlhttp.status == 200)
             {
-                alert(xmlhttp.responseText);
+//                alert(xmlhttp.responseText);
+                  location.reload();
             }
         }
                 xmlhttp.send(encodeURI('uuid=' + uuid));
