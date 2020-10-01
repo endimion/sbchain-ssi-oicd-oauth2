@@ -34,8 +34,7 @@ public class DBController {
     protected @ResponseBody
     String save(@AuthenticationPrincipal OidcUser oidcUser, @RequestParam(value = "uuid", required = true) String uuid) throws IllegalAccessException, IllegalArgumentException, IntrospectionException, InvocationTargetException {
         SsiApplication ssiApp = cacheService.get(uuid);
-        submitService.submit(ssiApp);
-        return "OK";
+        return submitService.submit(ssiApp);
     }
 
     @PostMapping("/temp")

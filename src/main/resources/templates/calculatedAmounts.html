@@ -40,16 +40,25 @@
 <!--            <div class="fetchButton">
                 <a th:href="@{'/multi/amounts/results?uuid='+${uuid}}" th:text="#{fetch.info}" class="fetchLink">Fetch Info</a>
             </div>-->
-            <div class="submitFinalButton">
-                <a   th:href="'#'" onclick="saveFinal()" th:text="#{submit}" class="submitFinal">Fetch Info</a>
+            <div   class="submitFinalButton">
+                <a  id="saveButton" th:href="'#'" onclick="saveFinal()" th:text="#{submit}" class="submitFinal">Store to DB</a>
             </div>
 
             <div class="issueVCButton">
-                <a th:href="${issueUrl}" th:text="#{issue.vc}" class="submitFinal">Fetch Info</a>
+                <a  id="issueLink"  th:text="#{issue.vc}" class="submitFinal">Issue VC</a>
             </div>
 
 
         </div>
+            
+        <div class="row button__row">
+            <div id="messageContainer" style="display:none">
+                mockmessage
+            </div>
+
+        </div>    
+            
+            
     <!-- </form> -->
     </div>
     <div th:replace="fragments/footer"></div>

@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,7 +44,6 @@ public class ReviewApplicationsController {
     @Autowired
     DBService dbServ;
 
-    private final static Logger log = LoggerFactory.getLogger(ReviewApplicationsController.class);
 
     @GetMapping("/view")
     protected ModelAndView personalInfo(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
@@ -62,6 +59,12 @@ public class ReviewApplicationsController {
             List<SsiApplication> applications = dbServ.findAllByAFM((String) otherClaims.get("taxisAfm"));
             model.addAttribute("applications", applications);
             model.addAttribute("newEnabled", true);
+
+            applications.stream().forEach(ssiApplication -> {
+                ssiApplication.getCredentialIds().stream().forEach(cred ->{
+
+                });
+            });
 
             applications.stream().forEach(app -> {
                 long monthsBetween = ChronoUnit.MONTHS.between(

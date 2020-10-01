@@ -48,7 +48,7 @@ public class RestController {
     boolean isBeneficiary(@RequestParam String afm, @RequestParam String nonce, @RequestParam String hashed) {
         String salt = System.getenv("SALT") != null ? System.getenv("SALT") : "salt";
         String sha256hex = DigestUtils.sha256Hex(nonce + salt);
-        if (hashed.equals(sha256hex) && cs.isNonce(nonce) && dbServ.getByTaxisAfm(afm).isPresent()) {
+        if (hashed.equals(sha256hex) && cs.isNonce(nonce) && dbServ.getByTaxisAfm(afm.trim()).isPresent()) {
             return true;
         }
         return false;

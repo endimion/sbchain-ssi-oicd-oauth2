@@ -114,22 +114,30 @@
      <artifactId>keycloak-spring-boot-adapter-core</artifactId>
      <version>10.0.1</version>
    </dependency>
+	 <!-- Ethereum -->
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>4.6.3</version>
+		</dependency>
+
+		  <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.8.1</version>
+		</dependency>
 	 <dependency>
-	  <groupId>org.web3j</groupId>
-	  <artifactId>abi</artifactId>
-	  <version>4.6.3</version>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-validator</artifactId>
+	  <version>5.4.2.Final</version>
 	  <type>jar</type>
 	 </dependency>
 	 <dependency>
-	  <groupId>org.web3j</groupId>
-	  <artifactId>crypto</artifactId>
-	  <version>4.6.3</version>
-	  <type>jar</type>
-	 </dependency>
-	 <dependency>
-	  <groupId>org.web3j</groupId>
-	  <artifactId>core</artifactId>
-	  <version>4.6.3</version>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>spring-web</artifactId>
+	  <version>5.2.8.RELEASE</version>
 	  <type>jar</type>
 	 </dependency>
 	</dependencies>
@@ -165,6 +173,7 @@
         <contract>
             <includes>
                 <include>VcRevocationRegistry</include>
+                <include>CaseMonitor</include>
             </includes>
             <excludes>
                 <exclude>mortal</exclude>

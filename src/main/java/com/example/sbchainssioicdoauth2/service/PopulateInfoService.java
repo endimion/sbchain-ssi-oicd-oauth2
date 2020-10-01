@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,8 @@ public class PopulateInfoService {
                 KeycloakAuthenticationToken kp = (KeycloakAuthenticationToken) principal;
                 kp.getAccount().getKeycloakSecurityContext().getIdToken().getOtherClaims();
                 Map<String, Object> otherClaims = kp.getAccount().getKeycloakSecurityContext().getIdToken().getOtherClaims();
+                cachedSsiApp.setCredentialIds(addCredentialIdAndIat("credential-id", cachedSsiApp, otherClaims));
+
 //                Optional<SsiApplication> oldApp = dbServ.getByTaxisAfm((String) otherClaims.get("taxisAfm"));
                 Optional<SsiApplication> oldApp = dbServ.getByUuid(id);
                 if (oldApp.isPresent()) {
@@ -116,12 +119,11 @@ public class PopulateInfoService {
             ssiApp.setTaxisFirstName(getStringIfNotNull(otherClaims.get("taxisFirstName"), ssiApp.getTaxisFirstName()));
             ssiApp.setTaxisFathersName(getStringIfNotNull(otherClaims.get("taxisFathersName"), ssiApp.getTaxisFathersName()));
             ssiApp.setTaxisMothersName(getStringIfNotNull(otherClaims.get("taxisMothersName"), ssiApp.getTaxisMothersName()));
-            ssiApp.setTaxisFamilyNameLatin(getStringIfNotNull(otherClaims.get("taxisFamilyNameLatin"), ssiApp.getTaxisFamilyNameLatin()));
-            ssiApp.setTaxisFirstNameLatin(getStringIfNotNull(otherClaims.get("taxisFirstNameLatin"), ssiApp.getTaxisFirstNameLatin()));
-            ssiApp.setTaxisFathersNameLatin(getStringIfNotNull(otherClaims.get("taxisFathersNameLatin"), ssiApp.getTaxisFathersNameLatin()));
-            ssiApp.setTaxisMothersNameLatin(getStringIfNotNull(otherClaims.get("taxisMothersNameLatin"), ssiApp.getTaxisMothersNameLatin()));
+            ssiApp.setSurnameLatin(getStringIfNotNull(otherClaims.get("surnameLatin"), ssiApp.getSurnameLatin()));
+            ssiApp.setNameLatin(getStringIfNotNull(otherClaims.get("nameLatin"), ssiApp.getNameLatin()));
+            ssiApp.setFatherNameLatin(getStringIfNotNull(otherClaims.get("fatherLatin"), ssiApp.getFatherNameLatin()));
+            ssiApp.setMotherNameLatin(getStringIfNotNull(otherClaims.get("motherLatin"), ssiApp.getMotherNameLatin()));
             ssiApp.setTaxisDateOfBirth(getStringIfNotNull(otherClaims.get("taxisDateOfBirth"), ssiApp.getTaxisDateOfBirth()));
-            addCredentialIdAndIat("credential-id", ssiApp, otherClaims);
 
 //            ssiApp.setTaxisGender(getStringIfNotNull(otherClaims.get("taxisGender"), ssiApp.getTaxisGender()));
             ssiApp.setNationality(getStringIfNotNull(otherClaims.get("nationality"), ssiApp.getNationality()));
@@ -217,7 +219,9 @@ public class PopulateInfoService {
 //            }
 //            if (formType.equals(FormType.INCOME_GUARANTEE.value)) {
             ssiApp.setMonthlyGuarantee(getStringIfNotNull(otherClaims.get("monthlyGuarantee"), ssiApp.getMonthlyGuarantee()));
-            ssiApp.setTotalIncome(getStringIfNotNull(otherClaims.get("totalIncome"), ssiApp.getTotalIncome()));
+//            ssiApp.setTotalIncome(getStringIfNotNull(otherClaims.get("totalIncome"), ssiApp.getTotalIncome()));
+            ssiApp.setTotalIncome(calculateTotalIncome(ssiApp));
+
             ssiApp.setMonthlyIncome(getStringIfNotNull(otherClaims.get("monthlyIncome"), ssiApp.getMonthlyIncome()));
             ssiApp.setMonthlyAid(getStringIfNotNull(otherClaims.get("monthlyAid"), ssiApp.getMonthlyAid()));
 //            }
@@ -233,10 +237,10 @@ public class PopulateInfoService {
 
     public String getStringIfNotNull(Object newValue, String oldValue) {
 
-        return newValue != null ? String.valueOf(newValue) : oldValue;
+        return newValue != null ? String.valueOf(newValue).trim() : oldValue;
     }
 
-    public void addCredentialIdAndIat(String attributeName, SsiApplication ssiApp, Map<String, Object> otherClaims) {
+    public List<CredsAndExp> addCredentialIdAndIat(String attributeName, SsiApplication ssiApp, Map<String, Object> otherClaims) {
 
         boolean exists = ssiApp.getCredentialIds().stream().filter(cid -> {
             return cid.getId().equals((String) otherClaims.get(attributeName));
@@ -245,12 +249,47 @@ public class PopulateInfoService {
         if (otherClaims.get(attributeName) != null && !exists) {
             String credentialId = (String) otherClaims.get(attributeName);
             String exp = (String) otherClaims.get("expires");
+            String name = (String) otherClaims.get("credential-name");
 
             CredsAndExp cdi = new SsiApplication.CredsAndExp();
             cdi.setId(credentialId);
             cdi.setExp(exp);
+            cdi.setName(name);
             ssiApp.getCredentialIds().add(cdi);
         }
+
+        return ssiApp.getCredentialIds();
+    }
+
+    private String calculateTotalIncome(SsiApplication app) {
+        int sum = 0;
+        sum += getLongOrZero(app.getDepositInterestA());
+        sum += getLongOrZero(app.getDepositsA());
+        sum += getLongOrZero(app.getEkasR());
+        sum += getLongOrZero(app.getErgomeR());
+        sum += getLongOrZero(app.getFarmingR());
+        sum += getLongOrZero(app.getFreelanceR());
+        sum += getLongOrZero(app.getInvestmentsA());
+        sum += getLongOrZero(app.getMonthlyAid());
+        sum += getLongOrZero(app.getOtherBenefitsR());
+        sum += getLongOrZero(app.getOtherIncomeR());
+        sum += getLongOrZero(app.getRentIncomeR());
+        sum += getLongOrZero(app.getSalariesR());
+        sum += getLongOrZero(app.getUnemploymentBenefitR());
+        return String.valueOf(sum);
+    }
+
+    private Long getLongOrZero(String value) {
+        try {
+            if (!StringUtils.isEmpty(value)) {
+                return Long.parseLong(value);
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return new Long(0);
+
     }
 
 }

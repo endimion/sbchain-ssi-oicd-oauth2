@@ -52,5 +52,21 @@ contract VcRevocationRegistry{
     }
     
     
+    function getAllCases() public view returns (bytes32[] memory) {
+        bytes32[] memory output = new bytes32[](entries.length); 
+
+        //get all ids 
+        if (entries.length > 0) {
+            uint index = 0;
+            for (uint n = entries.length; n > 0; n--) {
+                output[index++] = entries[n-1].uuid;
+            }
+        }
+        
+        return output; 
+    }
+
+    
+    
     
 }
