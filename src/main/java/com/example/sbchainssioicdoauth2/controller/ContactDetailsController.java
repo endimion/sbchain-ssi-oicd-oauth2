@@ -69,6 +69,6 @@ public class ContactDetailsController {
     @GetMapping("/back")
     protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
             ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
     }
 }

@@ -4,11 +4,15 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +42,10 @@ public class FinancialInfoController {
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
         ssiApp = infoService.updateModelfromCacheMergeDB(ssiApp, model, request, uuid);
         cacheService.putInfo(ssiApp, uuid);
+
+
+        Map<String, String>[] householdComposition = ssiApp.getHouseholdComposition();
+        model.addAttribute("houseHoldInfo", householdComposition);
         return new ModelAndView("financialInfo");
     }
 
@@ -49,33 +57,47 @@ public class FinancialInfoController {
 
     }
 
-    @GetMapping("/continue")
-    protected ModelAndView financialInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+//    @GetMapping("/continue")
+//    protected ModelAndView financialInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
+//
+////        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+////        SsiApplication ssiApp = cacheService.get(uuid);
+////        infoService.populateSsiApp(ssiApp, context, FormType.FINANCIAL_INFO.value, uuid);
+////        cacheService.putInfo(ssiApp, uuid);
+////        attr.addAttribute("uuid", uuid);
+////        try {
+////            request.logout();
+////        } catch (ServletException e) {
+////            log.error(e.getMessage());
+////        }
+////        log.info("GOT the uuid" + uuid);
+//        return new ModelAndView("redirect:/multi/assetInfo/view?uuid=" + uuid);
+//    }
+//
+//    @GetMapping("/nextCompleted")
+//    protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
+//            ModelMap model, HttpServletRequest request, HttpSession session) {
+//        return new ModelAndView("redirect:/multi/assetInfo/view?uuid=" + uuid);
+//    }
 
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.FINANCIAL_INFO.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
-//        attr.addAttribute("uuid", uuid);
-//        try {
-//            request.logout();
-//        } catch (ServletException e) {
-//            log.error(e.getMessage());
-//        }
-//        log.info("GOT the uuid" + uuid);
-        return new ModelAndView("redirect:/multi/assetInfo/view?uuid=" + uuid);
+    @GetMapping("/continue")
+    protected ModelAndView residenceInfoSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request) {
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getEmail());
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
     }
 
     @GetMapping("/nextCompleted")
     protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/assetInfo/view?uuid=" + uuid);
+                                        ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/electricityBill/view?uuid=" + uuid);
     }
+
 
     @GetMapping("/back")
     protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/fead/view?uuid=" + uuid);
+                                ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/disqualifyingCrit/view?uuid=" + uuid);
     }
 
 }

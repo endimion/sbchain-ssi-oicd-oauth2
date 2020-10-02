@@ -38,8 +38,10 @@ public class DBService {
             String id = oldApp.get().getId();
             ssiAppRepo.deleteById(id);
         }
+        //TODO if validation fails to we store the application?
+        ssiAppRepo.save(ssiApp);
         if (Validators.validateSsiApp(ssiApp)) {
-            ssiAppRepo.save(ssiApp);
+
             // convert ssiApp to monitoredCase
             ethServ.addCase(Wrappers.wrapSiiAppToCase(ssiApp));
 

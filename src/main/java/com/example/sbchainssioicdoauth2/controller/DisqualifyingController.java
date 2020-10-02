@@ -4,11 +4,14 @@ import com.example.sbchainssioicdoauth2.model.entity.SsiApplication;
 import com.example.sbchainssioicdoauth2.service.CacheService;
 import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +35,7 @@ public class DisqualifyingController {
 
     @GetMapping("/view")
     protected ModelAndView disqualifyingInfo(@RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException,
+                                             ModelMap model, HttpServletRequest request) throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, IntrospectionException, JsonProcessingException {
         model.addAttribute("uuid", uuid);
         infoService.populateFetchInfo(model, request, uuid);
@@ -43,39 +46,25 @@ public class DisqualifyingController {
         return new ModelAndView("disqCriteria");
     }
 
-//    @PreAuthorize("hasAuthority('personal_declaration')")
-//    @GetMapping("/results")
-//    protected ModelAndView disqualifyingInfoResults(@RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
-//
-//        infoService.populateFetchInfo(model, request, uuid);
-//
-//        return new ModelAndView("disqCriteria");
-//    }
-    @GetMapping("/continue")
-    protected ModelAndView disqualifyingInfoSave(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request, HttpSession session) {
 
-//        attr.addAttribute("uuid", uuid);
-//        try {
-//            request.logout();
-//        } catch (ServletException e) {
-//            log.error(e.getMessage());
-//        }
-//        return new ModelAndView("redirect:/multi/residenceInfo/view");
-//        log.info("GOT the uuid" + uuid);
-//        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid); //employment
-        return new ModelAndView("redirect:/multi/employment/view?uuid=" + uuid); //employment
+    @GetMapping("/continue")
+    protected ModelAndView feadSave(@RequestParam(value = "uuid", required = true) String uuid, RedirectAttributes attr, ModelMap model, HttpServletRequest request) {
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getDepositsA());
+        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid);
 
     }
 
     @GetMapping("/nextCompleted")
     protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/employment/view?uuid=" + uuid);
+                                        ModelMap model, HttpServletRequest request, HttpSession session) {
+        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid);
     }
+
 
     @GetMapping("/back")
     protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
+                                ModelMap model, HttpServletRequest request, HttpSession session) {
         return new ModelAndView("redirect:/multi/personalInfo/view?uuid=" + uuid);
     }
 

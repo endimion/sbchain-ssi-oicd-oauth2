@@ -7,15 +7,19 @@ import com.example.sbchainssioicdoauth2.service.PopulateInfoService;
 import com.example.sbchainssioicdoauth2.service.ResourceService;
 import com.example.sbchainssioicdoauth2.utils.FormType;
 import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
+
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +64,18 @@ public class ReviewApplicationsController {
             model.addAttribute("applications", applications);
             model.addAttribute("newEnabled", true);
 
-            applications.stream().forEach(ssiApplication -> {
-                ssiApplication.getCredentialIds().stream().forEach(cred ->{
 
+            //TODO only active applications or all???
+            Map<String, SsiApplication.CredsAndExp> expiredCreds = new HashMap<>();
+
+            applications.stream().forEach(activeApp -> {
+                activeApp.getCredentialIds().stream().forEach(cred -> {
+                    Date d = Date.from(Instant.ofEpochSecond(Long.parseLong(cred.getExp())));
+//                    log.info("credential {} expires at {}", cred.getId(), d.toString());
+                    if (d.before(new Date(System.currentTimeMillis()))) {
+                        log.info("credential {} from app {} expired at {}", cred.getId(), activeApp.getUuid(), d.toString());
+                        expiredCreds.put(activeApp.getUuid(), cred);
+                    }
                 });
             });
 
@@ -81,19 +94,19 @@ public class ReviewApplicationsController {
                 }
 
             });
+            model.addAttribute("expired", expiredCreds);
         }
 
         infoService.populateFetchInfo(model, request, uuid);
         SsiApplication ssiApp = cacheService.get(uuid);
         infoService.populateSsiApp(ssiApp, request, FormType.PERSONAL_DECLARATION.value, uuid);
-//        ssiApp = infoService.updateModelfromCacheMergeDB(ssiApp, model, request,);
         cacheService.putInfo(ssiApp, uuid);
         return new ModelAndView("review");
     }
 
     @GetMapping("/continue")
     protected ModelAndView personalInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
+                                              ModelMap model, HttpServletRequest request, HttpSession session) {
 
         SsiApplication ssiApp = cacheService.get(uuid);
         LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getHospitalized());
@@ -102,7 +115,7 @@ public class ReviewApplicationsController {
 
     @GetMapping("/nextCompleted")
     protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
-            ModelMap model, HttpServletRequest request, HttpSession session) {
+                                        ModelMap model, HttpServletRequest request, HttpSession session) {
         return new ModelAndView("redirect:/multi/disqualifyingCrit/view?uuid=" + uuid);
     }
 

@@ -8,6 +8,8 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.example.sbchainssioicdoauth2.utils.LogoutUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,28 +53,20 @@ public class ElectricityBillController {
     @GetMapping("/continue")
     protected ModelAndView electricityBillInfoSubmit(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid, ModelMap model, HttpServletRequest request) {
 
-//        KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-//        SsiApplication ssiApp = cacheService.get(uuid);
-//        infoService.populateSsiApp(ssiApp, context, FormType.ELECTRICITY_BILL_INFO.value, uuid);
-//        cacheService.putInfo(ssiApp, uuid);
-//        attr.addAttribute("uuid", uuid);
-//        try {
-//            request.logout();
-//        } catch (ServletException e) {
-//            log.error(e.getMessage());
-//        }
-        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
+        SsiApplication ssiApp = cacheService.get(uuid);
+        LogoutUtils.forceRelogIfNotCondition(request, ssiApp.getEmail());
+        return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
     }
 
     @GetMapping("/nextCompleted")
     protected ModelAndView nextComplete(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
             ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/residenceInfo/view?uuid=" + uuid);
+        return new ModelAndView("redirect:/multi/contactDetails/view?uuid=" + uuid);
     }
 
     @GetMapping("/back")
     protected ModelAndView back(RedirectAttributes attr, @RequestParam(value = "uuid", required = true) String uuid,
             ModelMap model, HttpServletRequest request, HttpSession session) {
-        return new ModelAndView("redirect:/multi/householdInfo/view?uuid=" + uuid);
+        return new ModelAndView("redirect:/multi/financialInfo/view?uuid=" + uuid);
     }
 }
